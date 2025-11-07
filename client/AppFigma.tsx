@@ -301,7 +301,9 @@ export default function App() {
         let sopResponse;
         let sopData;
         const primaryEndpoint = 'https://api.celeste7.ai/webhook/sop-creation';
-        const fallbackEndpoint = 'http://localhost:5678/webhook/sop-creation';
+        const fallbackEndpoint = window.location.hostname === 'localhost'
+          ? 'http://localhost:5678/webhook/sop-creation'
+          : 'https://api.celeste7.ai/webhook/sop-creation';
 
         try {
           // Try primary endpoint first
@@ -747,7 +749,9 @@ export default function App() {
     setIsLoadingMessage(true);
     setSopWebhookError(null); // Clear error state
 
-    const fallbackEndpoint = 'http://localhost:5678/webhook/sop-creation';
+    const fallbackEndpoint = window.location.hostname === 'localhost'
+      ? 'http://localhost:5678/webhook/sop-creation'
+      : 'https://api.celeste7.ai/webhook/sop-creation';
     console.log('🔄 Retrying with local endpoint:', fallbackEndpoint);
 
     try {

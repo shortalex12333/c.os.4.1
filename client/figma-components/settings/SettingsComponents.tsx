@@ -97,10 +97,8 @@ export const AppleSettingsRow = ({
       justifyContent: 'space-between',
       padding: isMobile ? 'var(--spacing-3) 0' : 'var(--spacing-4) 0',
       border: 'none',
-      borderBottom: isDarkMode ? `1px solid ${darkTheme.sidebar.border}` : '1px solid rgba(255, 255, 255, 0.2)',
       minHeight: isMobile ? '54px' : '64px',
       background: isDarkMode ? '#1e293b' : '#ffffff',
-      border: 'none',
       borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #e5e7eb',
       transition: 'all 0.2s ease'
     }}

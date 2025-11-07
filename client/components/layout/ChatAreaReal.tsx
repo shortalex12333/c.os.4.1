@@ -332,7 +332,11 @@ export function ChatAreaReal({
       console.log('🚀 [Bridge Clarify] Sending request:', payload);
 
       // Call the ask-ai endpoint (Tier 1: Clarify)
-      const response = await fetch('http://localhost:5678/webhook/ask-ai', {
+      const askAiUrl = window.location.hostname.includes('celeste7.ai') || window.location.hostname.includes('vercel.app')
+        ? 'https://api.celeste7.ai/webhook/ask-ai'
+        : 'http://localhost:5678/webhook/ask-ai';
+
+      const response = await fetch(askAiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

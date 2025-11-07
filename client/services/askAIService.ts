@@ -11,11 +11,16 @@ const getWebhookUrl = (): string => {
   const hostname = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
 
   // If accessing via localhost, use localhost
-  // Otherwise use host IP for local network
   if (hostname === 'localhost' || hostname === '127.0.0.1') {
     return 'http://localhost:5678/webhook/ask-ai';
   }
 
+  // If in production (celeste7.ai or similar), use cloud URL
+  if (hostname.includes('celeste7.ai') || hostname.includes('vercel.app')) {
+    return 'https://api.celeste7.ai/webhook/ask-ai';
+  }
+
+  // Otherwise use host IP for local network
   return `http://${getHostIP()}:5678/webhook/ask-ai`;
 };
 

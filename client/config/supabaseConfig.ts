@@ -1,13 +1,19 @@
 /**
  * Supabase Configuration for CelesteOS-Modern
- * Handles client-side authentication with local Supabase instance
+ * Handles client-side authentication with cloud/local Supabase instance
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { getHostIP } from './network';
 
-// Supabase configuration - Dynamic IP detection for LAN access
+// Supabase configuration - Dynamic based on environment
 const getSupabaseUrl = (): string => {
+  // Use environment variable if available (production)
+  if (import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL) {
+    return import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
+  }
+
+  // Development - dynamic IP detection for LAN access
   const hostname = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
   const protocol = typeof window !== 'undefined' ? window.location.protocol : 'http:';
 
@@ -20,8 +26,18 @@ const getSupabaseUrl = (): string => {
   return `http://${getHostIP()}:54321`;
 };
 
+const getSupabaseAnonKey = (): string => {
+  // Use environment variable if available (production)
+  if (import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  }
+
+  // Development - local Supabase anon key
+  return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+};
+
 const supabaseUrl = getSupabaseUrl();
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+const supabaseAnonKey = getSupabaseAnonKey();
 
 // Create Supabase client
 export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey, {

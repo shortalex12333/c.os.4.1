@@ -240,9 +240,8 @@ export function Settings({ isOpen, onClose, isMobile = false, displayName, onDis
         style={{
           background: isDarkMode ? '#0f172a' : '#ffffff',
           border: isDarkMode ? '1px solid #1e293b' : '1px solid #d1d5db',
-          boxShadow: isDarkMode ? '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2)' : '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
           borderRadius: '16px',
-          boxShadow: isChatMode 
+          boxShadow: isChatMode
             ? '0 24px 80px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(255, 255, 255, 0.2)'
             : '0 24px 80px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 2px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.15)',
           position: 'relative'
@@ -254,7 +253,6 @@ export function Settings({ isOpen, onClose, isMobile = false, displayName, onDis
           className="flex items-center justify-between"
           style={{
             padding: 'var(--spacing-6)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
             background: isDarkMode ? '#1e293b' : '#f8fafc',
             borderBottom: isDarkMode ? '1px solid #334155' : '1px solid #e2e8f0'
           }}
@@ -324,7 +322,6 @@ export function Settings({ isOpen, onClose, isMobile = false, displayName, onDis
                       lineHeight: '20px',
                       fontFamily: 'Eloquia Text, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                       borderRadius: '8px',
-                      border: 'none',
                       cursor: 'pointer',
                       background: isActive ? '#e2e8f0 !important' : '#f8fafc !important',
                       color: isActive ? '#1f2937' : '#6b7280',
