@@ -27,6 +27,7 @@ export interface SupabaseUserAuthResponse {
   expires_at: number;
   token?: string;
   sessionId: string;
+  yacht_id?: string; // Yacht ID for yacht-specific data
   message?: string;
   user?: User;
   session?: Session;
