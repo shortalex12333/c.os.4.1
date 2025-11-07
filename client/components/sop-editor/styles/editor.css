@@ -1,0 +1,272 @@
+/**
+ * CelesteOS SOP Canvas Editor Styles
+ * Frosted glass aesthetics with rounded edges
+ */
+
+:root {
+  --celesteos-glass-bg: rgba(255, 255, 255, 0.1);
+  --celesteos-glass-border: rgba(255, 255, 255, 0.2);
+  --celesteos-glass-shadow: rgba(0, 0, 0, 0.1);
+  --celesteos-primary: #3b82f6;
+  --celesteos-primary-hover: #2563eb;
+  --celesteos-success: #10b981;
+  --celesteos-danger: #ef4444;
+  --celesteos-text: #1f2937;
+  --celesteos-text-muted: #6b7280;
+  --celesteos-border-radius: 16px;
+  --celesteos-border-radius-sm: 8px;
+}
+
+.celesteos-editor-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Frosted Glass Card */
+.celesteos-glass-card {
+  background: var(--celesteos-glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--celesteos-glass-border);
+  border-radius: var(--celesteos-border-radius);
+  box-shadow: 0 8px 32px var(--celesteos-glass-shadow);
+  overflow: hidden;
+}
+
+/* Header Section */
+.celesteos-editor-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--celesteos-glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.celesteos-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--celesteos-text);
+  margin: 0;
+}
+
+.celesteos-metadata {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--celesteos-text-muted);
+}
+
+/* Editor Content */
+.celesteos-editor-content {
+  padding: 2rem;
+  min-height: 500px;
+}
+
+.ProseMirror {
+  outline: none;
+  min-height: 400px;
+  color: var(--celesteos-text);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 2rem 0 1rem;
+  color: var(--celesteos-text);
+}
+
+.ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem;
+  color: var(--celesteos-text);
+}
+
+.ProseMirror h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+  color: var(--celesteos-text);
+}
+
+.ProseMirror p {
+  margin: 0.75rem 0;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 2rem;
+  margin: 1rem 0;
+}
+
+.ProseMirror code {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.875rem;
+}
+
+.ProseMirror pre {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  border-radius: var(--celesteos-border-radius-sm);
+  overflow-x: auto;
+}
+
+/* Footer Actions */
+.celesteos-editor-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--celesteos-glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Buttons */
+.celesteos-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--celesteos-border-radius-sm);
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.celesteos-btn-primary {
+  background: var(--celesteos-primary);
+  color: white;
+}
+
+.celesteos-btn-primary:hover {
+  background: var(--celesteos-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.celesteos-btn-primary:disabled {
+  background: var(--celesteos-text-muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Status Indicators */
+.celesteos-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.celesteos-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.celesteos-status-online {
+  background: var(--celesteos-success);
+}
+
+.celesteos-status-offline {
+  background: var(--celesteos-danger);
+}
+
+.celesteos-status-syncing {
+  background: var(--celesteos-primary);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Toast Notifications */
+.celesteos-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  background: var(--celesteos-glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--celesteos-glass-border);
+  border-radius: var(--celesteos-border-radius-sm);
+  box-shadow: 0 8px 32px var(--celesteos-glass-shadow);
+  color: var(--celesteos-text);
+  font-size: 0.875rem;
+  animation: slideIn 0.3s ease;
+  z-index: 1000;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.celesteos-toast-success {
+  border-left: 4px solid var(--celesteos-success);
+}
+
+.celesteos-toast-error {
+  border-left: 4px solid var(--celesteos-danger);
+}
+
+/* Loading Spinner */
+.celesteos-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .celesteos-editor-container {
+    padding: 1rem;
+  }
+
+  .celesteos-editor-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .celesteos-editor-footer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .celesteos-toast {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+  }
+}

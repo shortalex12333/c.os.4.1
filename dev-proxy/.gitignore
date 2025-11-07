@@ -1,0 +1,16 @@
+# Ignore local configuration overrides
+*.local
+*.local.conf
+*.local.Caddyfile
+
+# Ignore SSL certificates
+*.pem
+*.crt
+*.key
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore pid files
+*.pid

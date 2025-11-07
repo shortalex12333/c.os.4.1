@@ -1,0 +1,157 @@
+/* SettingsGlass - Frosted glass modal */
+.celSettingsModal {
+  color: rgba(255,255,255,0.92) !important;
+}
+
+/* Content pane with dark text for readability */
+.celSettingsPane {
+  background: rgba(255,255,255,0.92);
+  color: #0B1220;
+}
+
+.celSettingsPane .title { 
+  color: #0B1220; 
+}
+
+.celSettingsPane .label { 
+  color: #334155; 
+}
+
+.celSettingsPane .helper { 
+  color: #64748B; 
+}
+
+.celSettingsPane ::placeholder { 
+  color: #94A3B8; 
+  opacity: 1; 
+}
+
+.celSettingsPane a, 
+.celSettingsPane a:visited, 
+.celSettingsPane a:hover, 
+.celSettingsPane a:active { 
+  color: inherit; 
+  text-decoration: underline; 
+  text-underline-offset: 2px; 
+}
+
+.celSettingsPane svg { 
+  color: currentColor; 
+  stroke: currentColor; 
+  fill: none; 
+}
+
+.celSettingsModal a,
+.celSettingsModal a:visited,
+.celSettingsModal a:hover,
+.celSettingsModal a:active {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
+.celSettingsModal svg {
+  color: inherit !important;
+  stroke: currentColor !important;
+  fill: none !important;
+}
+
+.celSettingsModal [data-active="true"] {
+  color: rgba(255,255,255,1) !important;
+}
+
+/* Neutralize Tailwind Typography */
+.celSettingsModal :where(.prose, .prose *) {
+  color: inherit !important;
+}
+
+/* Guard against stray utility classes */
+.celSettingsModal [class*="text-"]:not([data-allow-color="true"]) {
+  color: inherit !important;
+}
+
+/* Left nav specific styles */
+.celNavItem {
+  position: relative;
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.92);
+  transition: all 0.2s ease;
+}
+
+.celNavItem:hover {
+  background: rgba(255,255,255,0.10);
+}
+
+.celNavItem[data-active="true"] {
+  background: rgba(255,255,255,0.16);
+  color: rgba(255,255,255,1);
+}
+
+.celNavItem[data-active="true"]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 28px;
+  background: rgba(10, 132, 255, 0.7);
+  border-radius: 2px;
+}
+
+/* Form controls */
+.celFormRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  min-height: 56px;
+}
+
+/* Scoped form styling - only for SettingsGlass content pane */
+.celSettingsPane .celFormRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  min-height: 56px;
+}
+
+.celSettingsPane .celFormLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155; /* slate-700 */
+}
+
+.celSettingsPane .celFormHelper {
+  font-size: 13px;
+  color: #64748B; /* slate-500 */
+  margin-top: 4px;
+}
+
+.celSettingsPane .celInput {
+  background: #FFFFFF;
+  border: 1px solid #DADDE1;
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: #0B1220; /* slate-950 */
+  font-size: 15px;
+}
+
+.celSettingsPane .celInput::placeholder {
+  color: #94A3B8; /* slate-400 */
+}
+
+.celSettingsPane .celInput:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.6);
+}

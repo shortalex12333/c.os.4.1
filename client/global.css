@@ -1,0 +1,253 @@
+/* Eloquia Font Imports - Must be first */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Eloquia Font Stack - Using Inter as fallback until Eloquia fonts are available */
+:root {
+  --font-eloquia-display: 'Eloquia Display', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-eloquia-text: 'Eloquia Text', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --z-sweep: 1250;
+}
+
+@layer base {
+  /* Eloquia Typography Hierarchy */
+  html {
+    font-family: var(--font-eloquia-text);
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Eloquia Display - Headings ≥24px */
+  h1, .text-h1 {
+    font-family: var(--font-eloquia-display);
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 120%;
+  }
+
+  h2, .text-h2 {
+    font-family: var(--font-eloquia-display);
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 120%;
+  }
+
+  h3, .text-h3 {
+    font-family: var(--font-eloquia-display);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 130%;
+  }
+
+  /* Eloquia Text - Body & UI */
+  .text-body {
+    font-family: var(--font-eloquia-text);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+  }
+
+  .text-label {
+    font-family: var(--font-eloquia-text);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 140%;
+  }
+
+  .text-caption {
+    font-family: var(--font-eloquia-text);
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 140%;
+  }
+
+  /* Mobile responsive scaling */
+  @media (max-width: 640px) {
+    h1, .text-h1 {
+      font-size: 32px;
+    }
+    h2, .text-h2 {
+      font-size: 24px;
+    }
+    h3, .text-h3 {
+      font-size: 20px;
+    }
+  }
+
+  /**
+   * Tailwind CSS theme
+   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
+   * A different format will require also updating the theme in tailwind.config.ts.
+  */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Sun Sweep Theme Transition Animation */
+  .sun-sweep-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background:
+      radial-gradient(120% 60% at var(--sx, -40%) 110%,
+        rgba(255,220,120,0.58) 0%,
+        rgba(255,220,120,0.26) 22%,
+        rgba(255,220,120,0.10) 42%,
+        rgba(255,220,120,0.00) 70%);
+    mix-blend-mode: screen; /* default for to-dark */
+    filter: blur(18px);
+    will-change: transform, opacity;
+  }
+
+  .animate-sun-sweep {
+    animation: sun-sweep 620ms cubic-bezier(.22,.61,.36,1) forwards;
+  }
+
+  /* Variant for to-light */
+  .mix-blend-overlay {
+    mix-blend-mode: overlay;
+  }
+
+  .mix-blend-screen {
+    mix-blend-mode: screen;
+  }
+
+  /* Low-end devices reduce intensity & duration */
+  .sun-sweep-overlay[data-low="1"] {
+    filter: blur(14px);
+    background:
+      radial-gradient(120% 60% at var(--sx, -40%) 110%,
+        rgba(255,220,120,0.40) 0%,
+        rgba(255,220,120,0.18) 24%,
+        rgba(255,220,120,0.06) 44%,
+        rgba(255,220,120,0.00) 70%);
+  }
+
+  .sun-sweep-overlay[data-low="1"] .animate-sun-sweep {
+    animation-duration: 480ms;
+  }
+
+  /* Direction: horizon rise (keep consistent across app) */
+  @keyframes sun-sweep {
+    0%   { opacity: 0; transform: translateX(-12%) translateY(10%); }
+    18%  { opacity: 1; }
+    60%  { opacity: 1; transform: translateX(32%) translateY(0%); }
+    100% { opacity: 0; transform: translateX(78%) translateY(-6%); }
+  }
+
+  /* Motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-sun-sweep {
+      animation: none !important;
+    }
+    .sun-sweep-overlay {
+      opacity: 0 !important;
+    }
+  }
+
+  /* Optional: dampen heavy filters during sweep */
+  .sweep-active .glass,
+  .sweep-active [data-glass="1"] {
+    transition-duration: 150ms !important;
+  }
+}

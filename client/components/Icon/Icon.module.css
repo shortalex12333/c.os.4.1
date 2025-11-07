@@ -1,0 +1,16 @@
+/* Icon utility - Scoped icon standardization */
+.celIcon { 
+  color: inherit; 
+}
+
+.celIcon svg { 
+  width: 1em; 
+  height: 1em; 
+  stroke: currentColor; 
+  fill: none; 
+}
+
+.celIcon--solid svg { 
+  stroke: none; 
+  fill: currentColor; 
+}

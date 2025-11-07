@@ -1,0 +1,181 @@
+/**
+ * LOCAL UX Font System
+ * Serves Eloquia and Inter fonts locally for https://studio.local
+ * Prevents FOIT/FOUT and external font dependencies
+ */
+
+/* Eloquia Display Font Family - LOCAL UX Primary Typography */
+@font-face {
+  font-family: 'Eloquia Display';
+  src: url('/fonts/eloquia-display-regular.woff2') format('woff2'),
+       url('/fonts/eloquia-display-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  font-synthesis: none;
+}
+
+@font-face {
+  font-family: 'Eloquia Display';
+  src: url('/fonts/eloquia-display-medium.woff2') format('woff2'),
+       url('/fonts/eloquia-display-medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+  font-synthesis: none;
+}
+
+@font-face {
+  font-family: 'Eloquia Display';
+  src: url('/fonts/eloquia-display-semibold.woff2') format('woff2'),
+       url('/fonts/eloquia-display-semibold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+  font-synthesis: none;
+}
+
+/* Eloquia Text Font Family - LOCAL UX Body Typography */
+@font-face {
+  font-family: 'Eloquia Text';
+  src: url('/fonts/eloquia-text-regular.woff2') format('woff2'),
+       url('/fonts/eloquia-text-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  font-synthesis: none;
+}
+
+@font-face {
+  font-family: 'Eloquia Text';
+  src: url('/fonts/eloquia-text-medium.woff2') format('woff2'),
+       url('/fonts/eloquia-text-medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+  font-synthesis: none;
+}
+
+@font-face {
+  font-family: 'Eloquia Text';
+  src: url('/fonts/eloquia-text-semibold.woff2') format('woff2'),
+       url('/fonts/eloquia-text-semibold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+  font-synthesis: none;
+}
+
+/* Inter Font Family - LOCAL Fallback (Self-hosted) */
+@font-face {
+  font-family: 'Inter Local';
+  src: url('/fonts/inter-regular.woff2') format('woff2'),
+       url('/fonts/inter-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  font-synthesis: none;
+}
+
+@font-face {
+  font-family: 'Inter Local';
+  src: url('/fonts/inter-medium.woff2') format('woff2'),
+       url('/fonts/inter-medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+  font-synthesis: none;
+}
+
+@font-face {
+  font-family: 'Inter Local';
+  src: url('/fonts/inter-semibold.woff2') format('woff2'),
+       url('/fonts/inter-semibold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+  font-synthesis: none;
+}
+
+@font-face {
+  font-family: 'Inter Local';
+  src: url('/fonts/inter-bold.woff2') format('woff2'),
+       url('/fonts/inter-bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+  font-synthesis: none;
+}
+
+/* Font preload hints - to be added to HTML head */
+/* 
+<link rel="preload" href="/fonts/eloquia-display-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/eloquia-text-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-regular.woff2" as="font" type="font/woff2" crossorigin>
+*/
+
+/* LOCAL UX Typography System */
+:root {
+  /* Font stacks - Eloquia primary, Inter Local fallback, system fallback */
+  --font-display: 'Eloquia Display', 'Inter Local', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-text: 'Eloquia Text', 'Inter Local', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  
+  /* Typography specifications from LOCAL UX authority */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  
+  /* Line heights for optimal readability */
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+  
+  /* Letter spacing for Eloquia optimization */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+}
+
+/* Base typography classes for LOCAL UX */
+.font-display {
+  font-family: var(--font-display);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-text {
+  font-family: var(--font-text);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-synthesis: none;
+}
+
+/* Typography utility classes */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Prevent font synthesis in all cases for LOCAL UX precision */
+* {
+  font-synthesis: none;
+}

@@ -1,0 +1,357 @@
+/* ================================================
+   CELESTE7 PREMIUM LAYOUT SYSTEM
+   Precision Grid for $15,000 Product
+   ================================================ */
+
+:root {
+  /* Grid Dimensions - From Screenshot Analysis */
+  --sidebar-width: 280px;
+  --sidebar-collapsed: 60px;
+  --content-max-width: 600px;
+  --content-wide: 800px;
+  --container-max: 1400px;
+  
+  /* Spacing System - 8px Base Unit */
+  --space-unit: 8px;
+  --space-xs: calc(var(--space-unit) * 0.5);   /* 4px */
+  --space-sm: var(--space-unit);                /* 8px */
+  --space-md: calc(var(--space-unit) * 2);      /* 16px */
+  --space-lg: calc(var(--space-unit) * 3);      /* 24px */
+  --space-xl: calc(var(--space-unit) * 4);      /* 32px */
+  --space-2xl: calc(var(--space-unit) * 5);     /* 40px */
+  --space-3xl: calc(var(--space-unit) * 6);     /* 48px */
+  --space-4xl: calc(var(--space-unit) * 8);     /* 64px */
+  --space-5xl: calc(var(--space-unit) * 10);    /* 80px */
+  
+  /* Content Padding */
+  --content-padding-x: var(--space-2xl);
+  --content-padding-y: var(--space-2xl);
+  
+  /* Component Heights */
+  --header-height: 56px;
+  --input-height: 48px;
+  --button-height: 40px;
+  --sidebar-item-height: 36px;
+  
+  /* Border Radius - Precise, not playful */
+  --radius-none: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-full: 9999px;
+}
+
+/* Master Container */
+.app-container {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  position: relative;
+}
+
+/* Sidebar collapsed state */
+.app-container.sidebar-collapsed {
+  grid-template-columns: var(--sidebar-collapsed) 1fr;
+}
+
+/* Mobile: Full width, no sidebar */
+@media (max-width: 767px) {
+  .app-container {
+    grid-template-columns: 1fr;
+  }
+  
+  :root {
+    --sidebar-width: 100%;
+    --content-padding-x: var(--space-md);
+    --content-padding-y: var(--space-lg);
+  }
+}
+
+/* Main Content Area */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--content-padding-y) var(--content-padding-x);
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Content Container - Centered with max width */
+.content-container {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  position: relative;
+}
+
+.content-container.wide {
+  max-width: var(--content-wide);
+}
+
+/* Sidebar Layout */
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Sidebar Sections */
+.sidebar-section {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sidebar-section:last-child {
+  border-bottom: none;
+  margin-top: auto; /* Push to bottom */
+}
+
+/* Logo Section */
+.logo-section {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Premium Card Layout */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Input Group Layout */
+.input-group {
+  position: relative;
+  width: 100%;
+}
+
+.input-field {
+  width: 100%;
+  height: var(--input-height);
+  padding: 0 var(--space-md);
+  padding-right: calc(var(--space-md) * 8); /* Space for buttons */
+  background: var(--input-bg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-md);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-focus);
+}
+
+/* Input Attachments */
+.input-attachments {
+  position: absolute;
+  right: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* Welcome Message Layout */
+.welcome-container {
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.welcome-heading {
+  margin-bottom: var(--space-sm);
+}
+
+.welcome-subtext {
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+
+/* Footer Layout */
+.app-footer {
+  position: fixed;
+  bottom: var(--space-2xl);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  width: 100%;
+  max-width: var(--content-max-width);
+}
+
+/* Confidence Score Layout */
+.confidence-display {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+}
+
+.confidence-meter {
+  width: 80px;
+  height: 80px;
+  position: relative;
+}
+
+.confidence-details {
+  flex: 1;
+}
+
+/* Source Citation Layout */
+.source-citation {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* Offline Indicator Layout */
+.offline-indicator {
+  position: fixed;
+  top: var(--space-md);
+  right: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  z-index: 1000;
+}
+
+.status-light {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Multi-Device Network Layout */
+.network-panel {
+  position: fixed;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  width: 320px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.device-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+}
+
+.device-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+}
+
+/* Emergency Mode Layout */
+.emergency-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-primary);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-lg);
+}
+
+.emergency-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-lg);
+  border-bottom: 2px solid var(--c7-danger);
+}
+
+.emergency-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+/* Responsive Grid Breakpoints */
+@media (min-width: 768px) {
+  .main-content {
+    margin-left: var(--sidebar-width);
+  }
+}
+
+@media (min-width: 1024px) {
+  .content-container {
+    max-width: var(--content-max-width);
+  }
+}
+
+@media (min-width: 1280px) {
+  .content-container.wide {
+    max-width: var(--content-wide);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .sidebar,
+  .offline-indicator,
+  .network-panel {
+    display: none;
+  }
+  
+  .main-content {
+    margin: 0;
+    padding: 20px;
+  }
+}

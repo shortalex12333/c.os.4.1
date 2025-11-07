@@ -1,0 +1,39 @@
+# HTTPS configuration for celesteos.local with mkcert certificates
+# This enables secure access from any device on the LAN
+
+# HTTPS with trusted certificates
+celesteos.local {
+    tls celesteos.local+5.pem celesteos.local+5-key.pem
+
+    reverse_proxy localhost:8082 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+        header_up Upgrade {http.request.header.Upgrade}
+        header_up Connection {http.request.header.Connection}
+    }
+}
+
+# Also support HTTPS on celesteos (without .local)
+celesteos {
+    tls celesteos.local+5.pem celesteos.local+5-key.pem
+
+    reverse_proxy localhost:8082 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+        header_up Upgrade {http.request.header.Upgrade}
+        header_up Connection {http.request.header.Connection}
+    }
+}
+
+# HTTP to HTTPS redirect
+celesteos.local:80 {
+    redir https://celesteos.local{uri} permanent
+}
+
+celesteos:80 {
+    redir https://celesteos.local{uri} permanent
+}

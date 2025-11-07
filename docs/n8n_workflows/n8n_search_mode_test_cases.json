@@ -1,0 +1,503 @@
+{
+  "test_suite": "N8N Search Mode Email Transform - Edge Case Testing",
+  "version": "1.0",
+  "date": "2025-10-20",
+
+  "test_cases": [
+    {
+      "test_id": "TEST_001",
+      "name": "Empty Results (0 emails)",
+      "description": "User searches but no matching emails found",
+      "input": {
+        "success": true,
+        "emails": [],
+        "emails_found": 0,
+        "tier_reached": 4,
+        "analyzed_data": {
+          "email_analysis": {
+            "high_confidence": [],
+            "medium_confidence": [],
+            "low_confidence": [],
+            "metadata": {
+              "total_analyzed": 50
+            }
+          },
+          "entities": {
+            "merged": []
+          }
+        }
+      },
+      "expected_output": {
+        "success": true,
+        "ux_display": "search_mode",
+        "ui_payload": {
+          "primary_findings": [],
+          "other_emails": [],
+          "all_emails": [],
+          "hidden_results": {
+            "count": 0,
+            "emails": []
+          },
+          "summary": {
+            "emails_found": 0,
+            "showing": 0,
+            "hidden": 0,
+            "tier_reached": 4,
+            "emails_searched": 50,
+            "message": "Searched 50 recent emails, found 0 matches",
+            "suggestion": "Try different keywords or check your email filters"
+          }
+        }
+      },
+      "validation_checks": [
+        "summary.message contains 'Searched 50 recent emails'",
+        "all email arrays are empty",
+        "ux_display is 'search_mode' not 'error'"
+      ]
+    },
+
+    {
+      "test_id": "TEST_002",
+      "name": "Single Email Result",
+      "description": "Only 1 high-confidence email found",
+      "input": {
+        "success": true,
+        "emails": [
+          {
+            "id": "AAMkAGE001",
+            "subject": "Invoice #12345",
+            "from": {
+              "emailAddress": {
+                "name": "John Doe",
+                "address": "john@example.com"
+              }
+            },
+            "receivedDateTime": "2025-10-20T12:00:00Z",
+            "bodyPreview": "Please find attached the invoice for services rendered...",
+            "hasAttachments": true,
+            "isRead": false,
+            "importance": "high"
+          }
+        ],
+        "emails_found": 1,
+        "tier_reached": 1,
+        "analyzed_data": {
+          "email_analysis": {
+            "high_confidence": ["AAMkAGE001"],
+            "medium_confidence": [],
+            "low_confidence": [],
+            "metadata": {
+              "total_analyzed": 50
+            }
+          },
+          "entities": {
+            "merged": [
+              {"term": "invoice", "type": "document_type", "final_weight": 3.0}
+            ]
+          }
+        }
+      },
+      "expected_output": {
+        "ui_payload": {
+          "primary_findings": [
+            {
+              "id": "AAMkAGE001",
+              "display_name": "Invoice #12345",
+              "sender": {
+                "name": "John Doe",
+                "email": "john@example.com"
+              },
+              "has_attachments": true,
+              "links": {
+                "document": "https://outlook.office365.com/mail/deeplink/read/AAMkAGE001?ItemID=AAMkAGE001&exvsurl=1"
+              }
+            }
+          ],
+          "other_emails": [],
+          "all_emails": [],
+          "hidden_results": {
+            "count": 0,
+            "emails": []
+          },
+          "summary": {
+            "showing": 1,
+            "hidden": 0
+          }
+        }
+      },
+      "validation_checks": [
+        "primary_findings.length === 1",
+        "other_emails is empty",
+        "all_emails is empty",
+        "links.document contains email.id twice (path + ItemID param)",
+        "display_name uses subject field"
+      ]
+    },
+
+    {
+      "test_id": "TEST_003",
+      "name": "Exactly 17 Emails (Full Cascade)",
+      "description": "7 high + 5 medium + 5 low = perfect 17 shown",
+      "input": {
+        "success": true,
+        "emails": [
+          {"id": "HIGH_01", "subject": "High 1", "from": {"emailAddress": {"name": "User 1"}}, "bodyPreview": "Content 1"},
+          {"id": "HIGH_02", "subject": "High 2", "from": {"emailAddress": {"name": "User 2"}}, "bodyPreview": "Content 2"},
+          {"id": "HIGH_03", "subject": "High 3", "from": {"emailAddress": {"name": "User 3"}}, "bodyPreview": "Content 3"},
+          {"id": "HIGH_04", "subject": "High 4", "from": {"emailAddress": {"name": "User 4"}}, "bodyPreview": "Content 4"},
+          {"id": "HIGH_05", "subject": "High 5", "from": {"emailAddress": {"name": "User 5"}}, "bodyPreview": "Content 5"},
+          {"id": "HIGH_06", "subject": "High 6", "from": {"emailAddress": {"name": "User 6"}}, "bodyPreview": "Content 6"},
+          {"id": "HIGH_07", "subject": "High 7", "from": {"emailAddress": {"name": "User 7"}}, "bodyPreview": "Content 7"},
+          {"id": "MED_01", "subject": "Med 1", "from": {"emailAddress": {"name": "User 8"}}, "bodyPreview": "Content 8"},
+          {"id": "MED_02", "subject": "Med 2", "from": {"emailAddress": {"name": "User 9"}}, "bodyPreview": "Content 9"},
+          {"id": "MED_03", "subject": "Med 3", "from": {"emailAddress": {"name": "User 10"}}, "bodyPreview": "Content 10"},
+          {"id": "MED_04", "subject": "Med 4", "from": {"emailAddress": {"name": "User 11"}}, "bodyPreview": "Content 11"},
+          {"id": "MED_05", "subject": "Med 5", "from": {"emailAddress": {"name": "User 12"}}, "bodyPreview": "Content 12"},
+          {"id": "LOW_01", "subject": "Low 1", "from": {"emailAddress": {"name": "User 13"}}, "bodyPreview": "Content 13"},
+          {"id": "LOW_02", "subject": "Low 2", "from": {"emailAddress": {"name": "User 14"}}, "bodyPreview": "Content 14"},
+          {"id": "LOW_03", "subject": "Low 3", "from": {"emailAddress": {"name": "User 15"}}, "bodyPreview": "Content 15"},
+          {"id": "LOW_04", "subject": "Low 4", "from": {"emailAddress": {"name": "User 16"}}, "bodyPreview": "Content 16"},
+          {"id": "LOW_05", "subject": "Low 5", "from": {"emailAddress": {"name": "User 17"}}, "bodyPreview": "Content 17"}
+        ],
+        "emails_found": 17,
+        "tier_reached": 1,
+        "analyzed_data": {
+          "email_analysis": {
+            "high_confidence": ["HIGH_01", "HIGH_02", "HIGH_03", "HIGH_04", "HIGH_05", "HIGH_06", "HIGH_07"],
+            "medium_confidence": ["MED_01", "MED_02", "MED_03", "MED_04", "MED_05"],
+            "low_confidence": ["LOW_01", "LOW_02", "LOW_03", "LOW_04", "LOW_05"],
+            "metadata": {
+              "total_analyzed": 50
+            }
+          }
+        }
+      },
+      "expected_output": {
+        "ui_payload": {
+          "primary_findings": {"$length": 7},
+          "other_emails": {"$length": 5},
+          "all_emails": {"$length": 5},
+          "hidden_results": {
+            "count": 0,
+            "emails": []
+          },
+          "summary": {
+            "showing": 17,
+            "hidden": 0
+          }
+        }
+      },
+      "validation_checks": [
+        "primary_findings.length === 7",
+        "other_emails.length === 5",
+        "all_emails.length === 5",
+        "summary.showing === 17",
+        "hidden_results.count === 0",
+        "All email IDs are present in respective sections"
+      ]
+    },
+
+    {
+      "test_id": "TEST_004",
+      "name": "50 Emails with Overflow",
+      "description": "15 high + 20 medium + 15 low = 33 hidden",
+      "input": {
+        "emails_found": 50,
+        "analyzed_data": {
+          "email_analysis": {
+            "high_confidence": [
+              "H01", "H02", "H03", "H04", "H05", "H06", "H07",
+              "H08", "H09", "H10", "H11", "H12", "H13", "H14", "H15"
+            ],
+            "medium_confidence": [
+              "M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08", "M09", "M10",
+              "M11", "M12", "M13", "M14", "M15", "M16", "M17", "M18", "M19", "M20"
+            ],
+            "low_confidence": [
+              "L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10",
+              "L11", "L12", "L13", "L14", "L15"
+            ]
+          }
+        }
+      },
+      "expected_output": {
+        "ui_payload": {
+          "primary_findings": {"$length": 7, "$contains_ids": ["H01", "H02", "H03", "H04", "H05", "H06", "H07"]},
+          "other_emails": {"$length": 5, "$contains_ids": ["M01", "M02", "M03", "M04", "M05"]},
+          "all_emails": {"$length": 5, "$contains_ids": ["L01", "L02", "L03", "L04", "L05"]},
+          "hidden_results": {
+            "count": 33,
+            "emails": {"$length": 33}
+          },
+          "summary": {
+            "showing": 17,
+            "hidden": 33
+          }
+        }
+      },
+      "validation_checks": [
+        "hidden_results.count === 33",
+        "hidden_results.emails contains H08-H15 (8 emails)",
+        "hidden_results.emails contains M06-M20 (15 emails)",
+        "hidden_results.emails contains L06-L15 (10 emails)",
+        "Total: 8 + 15 + 10 = 33 hidden"
+      ]
+    },
+
+    {
+      "test_id": "TEST_005",
+      "name": "Token Expired Error",
+      "description": "Microsoft Graph API returns 401 unauthorized",
+      "input": {
+        "error": {
+          "code": "TOKEN_EXPIRED",
+          "status": 401,
+          "message": "Access token has expired"
+        }
+      },
+      "expected_output": {
+        "success": false,
+        "ux_display": "error",
+        "error": {
+          "type": "token_expired",
+          "message": "Your email connection has expired. Please reconnect your email account.",
+          "action": "redirect_to_settings",
+          "redirect_url": "/settings/email-connector",
+          "cta_text": "Connect Email"
+        }
+      },
+      "validation_checks": [
+        "success === false",
+        "ux_display === 'error'",
+        "error.type === 'token_expired'",
+        "error.redirect_url is provided",
+        "error.cta_text is user-friendly"
+      ]
+    },
+
+    {
+      "test_id": "TEST_006",
+      "name": "Malformed Email (Missing Subject)",
+      "description": "Email object missing critical fields",
+      "input": {
+        "emails": [
+          {
+            "id": "AAMkAGE001",
+            "subject": null,
+            "from": null,
+            "receivedDateTime": "2025-10-20T12:00:00Z",
+            "bodyPreview": "Some content..."
+          }
+        ],
+        "emails_found": 1,
+        "analyzed_data": {
+          "email_analysis": {
+            "high_confidence": ["AAMkAGE001"],
+            "medium_confidence": [],
+            "low_confidence": []
+          }
+        }
+      },
+      "expected_output": {
+        "ui_payload": {
+          "primary_findings": [
+            {
+              "id": "AAMkAGE001",
+              "display_name": "(No Subject)",
+              "sender": {
+                "name": "Unknown Sender",
+                "email": ""
+              },
+              "content_preview": "Some content..."
+            }
+          ]
+        }
+      },
+      "validation_checks": [
+        "display_name === '(No Subject)'",
+        "sender.name === 'Unknown Sender'",
+        "Email is NOT skipped (included in results)",
+        "content_preview is still populated"
+      ]
+    },
+
+    {
+      "test_id": "TEST_007",
+      "name": "Long Body Preview (500+ chars)",
+      "description": "Email bodyPreview exceeds 500 char limit",
+      "input": {
+        "emails": [
+          {
+            "id": "AAMkAGE001",
+            "subject": "Long Email",
+            "from": {"emailAddress": {"name": "Sender"}},
+            "bodyPreview": "A".repeat(1000)
+          }
+        ],
+        "emails_found": 1,
+        "analyzed_data": {
+          "email_analysis": {
+            "high_confidence": ["AAMkAGE001"]
+          }
+        }
+      },
+      "expected_output": {
+        "ui_payload": {
+          "primary_findings": [
+            {
+              "content_preview": {"$length": 500}
+            }
+          ]
+        }
+      },
+      "validation_checks": [
+        "content_preview.length === 500",
+        "Long content is truncated, not rejected",
+        "No ellipsis added (frontend handles that)"
+      ]
+    },
+
+    {
+      "test_id": "TEST_008",
+      "name": "Handover Section Population",
+      "description": "Entities extracted and populated into handover",
+      "input": {
+        "emails": [
+          {
+            "id": "AAMkAGE001",
+            "subject": "Pump failure",
+            "from": {"emailAddress": {"name": "Engineer"}},
+            "bodyPreview": "The port fuel pump is showing error code P0231"
+          }
+        ],
+        "emails_found": 1,
+        "analyzed_data": {
+          "email_analysis": {
+            "high_confidence": ["AAMkAGE001"]
+          },
+          "entities": {
+            "merged": [
+              {"term": "fuel pump", "type": "equipment", "final_weight": 3.5},
+              {"term": "P0231", "type": "error_code", "final_weight": 2.0}
+            ]
+          }
+        }
+      },
+      "expected_output": {
+        "ui_payload": {
+          "handover_section": {
+            "system": "fuel pump",
+            "fault_code": "P0231",
+            "symptoms": "Email search",
+            "actions_taken": "Searched email correspondence for related information",
+            "linked_doc": "https://outlook.office365.com/mail/deeplink/read/AAMkAGE001?ItemID=AAMkAGE001&exvsurl=1"
+          }
+        }
+      },
+      "validation_checks": [
+        "handover_section.system === 'fuel pump'",
+        "handover_section.fault_code === 'P0231'",
+        "handover_section.linked_doc points to top email",
+        "Entities are correctly extracted from merged array"
+      ]
+    },
+
+    {
+      "test_id": "TEST_009",
+      "name": "Network Offline Error",
+      "description": "User has no internet connection",
+      "input": {
+        "error": {
+          "code": "NETWORK_ERROR",
+          "status": 0,
+          "message": "Network request failed"
+        }
+      },
+      "expected_output": {
+        "success": false,
+        "ux_display": "error",
+        "error": {
+          "type": "offline",
+          "message": "Unable to connect to email service. Please check your internet connection.",
+          "action": "retry",
+          "cta_text": "Retry Search"
+        }
+      },
+      "validation_checks": [
+        "error.type === 'offline'",
+        "error.action === 'retry'",
+        "User-friendly offline message shown"
+      ]
+    },
+
+    {
+      "test_id": "TEST_010",
+      "name": "Uneven Tier Distribution",
+      "description": "2 high, 10 medium, 1 low",
+      "input": {
+        "emails_found": 13,
+        "analyzed_data": {
+          "email_analysis": {
+            "high_confidence": ["H01", "H02"],
+            "medium_confidence": ["M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08", "M09", "M10"],
+            "low_confidence": ["L01"]
+          }
+        }
+      },
+      "expected_output": {
+        "ui_payload": {
+          "primary_findings": {"$length": 2},
+          "other_emails": {"$length": 5},
+          "all_emails": {"$length": 1},
+          "hidden_results": {
+            "count": 5,
+            "emails": {"$contains_ids": ["M06", "M07", "M08", "M09", "M10"]}
+          },
+          "summary": {
+            "showing": 8,
+            "hidden": 5
+          }
+        }
+      },
+      "validation_checks": [
+        "primary_findings only shows 2 (not padded to 7)",
+        "other_emails shows 5 (not all 10)",
+        "all_emails shows 1 (not padded)",
+        "hidden_results contains medium overflow (M06-M10)"
+      ]
+    }
+  ],
+
+  "stress_tests": [
+    {
+      "test_id": "STRESS_001",
+      "name": "Invalid ATLAS Input",
+      "input": null,
+      "expected": "Catastrophic error handler returns system_error"
+    },
+    {
+      "test_id": "STRESS_002",
+      "name": "Missing email_analysis Object",
+      "input": {
+        "emails": [],
+        "analyzed_data": {}
+      },
+      "expected": "Gracefully handles missing email_analysis, returns empty results"
+    },
+    {
+      "test_id": "STRESS_003",
+      "name": "Email ID Not Found in emails[] Array",
+      "input": {
+        "emails": [{"id": "AAMkA001"}],
+        "analyzed_data": {
+          "email_analysis": {
+            "high_confidence": ["AAMkA999"]
+          }
+        }
+      },
+      "expected": "Skips unmatchable IDs, doesn't crash"
+    }
+  ],
+
+  "validation_script": "Use these test cases with n8n's 'Execute Once for Each Item' mode, feeding each input to the JavaScript node and comparing actual vs expected output."
+}

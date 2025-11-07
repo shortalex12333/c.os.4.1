@@ -1,0 +1,177 @@
+/* ================================================
+   CELESTE7 OFFICIAL BRAND COLOR SYSTEM
+   $15,000 Premium Maritime Product
+   "Rolex of Yachting AI"
+   ================================================ */
+
+/* Brand Colors - Official Palette from Brand Guidelines */
+:root {
+  /* Primary Whites - Clean Maritime Aesthetic */
+  --c7-white-primary: #FFFFFF;
+  --c7-white-secondary: #F8F8F0;
+  --c7-white-tertiary: #F4F4F4;
+  --c7-white-quaternary: #FAFAFA;
+  
+  /* Primary Blacks - Professional Depth */
+  --c7-black-primary: #181818;
+  --c7-black-secondary: #242424;
+  --c7-black-tertiary: #020202;
+  
+  /* Brand Blues - Maritime Excellence */
+  --c7-blue-primary: #0070FF;    /* Official Brand Blue */
+  --c7-blue-secondary: #00A4FF;  /* Secondary Blue */
+  --c7-blue-tertiary: #BADDE9;   /* Light Blue Accent */
+  
+  /* Neutral Grey */
+  --c7-grey-light: #E5E5E5;
+  
+  /* Critical Brand Gradient - Logo & Premium Elements */
+  --c7-gradient: linear-gradient(135deg, #BADDE9 0%, #2FB9E8 100%);
+  --c7-gradient-subtle: linear-gradient(135deg, rgba(186, 221, 233, 0.1) 0%, rgba(47, 185, 232, 0.1) 100%);
+  
+  /* Maritime Status Colors */
+  --c7-success: #00D084;    /* Starboard Green */
+  --c7-warning: #FFA500;    /* Navigation Orange */
+  --c7-danger: #DC2626;     /* Port Red */
+  --c7-info: #0070FF;       /* Information Blue */
+}
+
+/* Light Mode - Premium Maritime Theme */
+:root[data-theme="light"],
+:root {
+  /* Backgrounds */
+  --bg-primary: var(--c7-white-primary);
+  --bg-secondary: var(--c7-white-secondary);
+  --bg-tertiary: var(--c7-white-tertiary);
+  --bg-elevated: var(--c7-white-quaternary);
+  
+  /* Subtle gradient background from screenshot */
+  --bg-gradient: linear-gradient(135deg, #E8EEF4 0%, #F0F4F8 50%, #E2E9F0 100%);
+  
+  /* Text Colors */
+  --text-primary: #2C3E50;      /* Dark grey from screenshot */
+  --text-secondary: #6B7B8C;    /* Medium grey */
+  --text-muted: #9CA8B4;        /* Light grey */
+  --text-inverse: var(--c7-white-primary);
+  
+  /* Interactive Elements */
+  --accent-primary: var(--c7-blue-primary);
+  --accent-secondary: var(--c7-blue-secondary);
+  --accent-hover: #0056CC;      /* Darker blue for hover */
+  --accent-focus: rgba(0, 112, 255, 0.2);
+  
+  /* Borders */
+  --border-subtle: #F0F4F8;
+  --border-default: #E0E7ED;
+  --border-strong: #CBD5E0;
+  
+  /* Shadows - Subtle depth */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.10);
+  
+  /* Component specific */
+  --sidebar-bg: var(--c7-white-primary);
+  --input-bg: var(--c7-white-primary);
+  --card-bg: var(--c7-white-primary);
+  --button-primary-bg: var(--c7-blue-primary);
+  --button-primary-text: var(--c7-white-primary);
+}
+
+/* Dark Mode - Zero White Backgrounds as Required */
+:root[data-theme="dark"] {
+  /* Backgrounds - ZERO WHITE */
+  --bg-primary: var(--c7-black-tertiary);     /* #020202 - Deepest black */
+  --bg-secondary: var(--c7-black-primary);    /* #181818 - Primary black */
+  --bg-tertiary: var(--c7-black-secondary);   /* #242424 - Secondary black */
+  --bg-elevated: #2A2E36;                     /* Slightly elevated */
+  
+  /* Dark gradient - subtle variation */
+  --bg-gradient: linear-gradient(135deg, 
+    var(--c7-black-tertiary) 0%, 
+    var(--c7-black-primary) 50%, 
+    #0F1013 100%
+  );
+  
+  /* Text Colors - High contrast */
+  --text-primary: #E8E9EB;      /* High contrast white */
+  --text-secondary: #B4B7BD;    /* Secondary white */
+  --text-muted: #7A7F89;        /* Muted grey */
+  --text-inverse: var(--c7-black-primary);
+  
+  /* Interactive Elements - Adjusted for dark */
+  --accent-primary: var(--c7-blue-primary);   /* Stays consistent */
+  --accent-secondary: #5B9FEF;                /* Brighter for dark */
+  --accent-hover: #3385FF;
+  --accent-focus: rgba(0, 112, 255, 0.3);
+  
+  /* Borders - Subtle only */
+  --border-subtle: #2A2E36;
+  --border-default: #353A44;
+  --border-strong: #404650;
+  
+  /* Shadows - Darker for depth */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.8);
+  --shadow-glow: 0 0 20px rgba(0, 112, 255, 0.15);
+  
+  /* Component specific - NO WHITE */
+  --sidebar-bg: var(--c7-black-primary);
+  --input-bg: var(--c7-black-secondary);
+  --card-bg: var(--c7-black-secondary);
+  --button-primary-bg: var(--c7-blue-primary);
+  --button-primary-text: var(--c7-black-primary);
+}
+
+/* Smooth theme transitions */
+* {
+  transition: 
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Premium animations for color changes */
+@keyframes brandGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 112, 255, 0); }
+  50% { box-shadow: 0 0 20px 2px rgba(0, 112, 255, 0.3); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Utility classes for brand colors */
+.brand-gradient {
+  background: var(--c7-gradient);
+  background-size: 200% 200%;
+  animation: gradientShift 10s ease infinite;
+}
+
+.brand-blue {
+  color: var(--c7-blue-primary);
+}
+
+.brand-gradient-text {
+  background: var(--c7-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Confidence Score Colors */
+.confidence-low { color: var(--c7-danger); }
+.confidence-medium { color: var(--c7-warning); }
+.confidence-high { color: var(--c7-success); }
+
+/* Offline Status Colors */
+.status-online { color: var(--c7-success); }
+.status-offline { color: var(--c7-blue-secondary); }
+.status-syncing { color: var(--c7-warning); }

@@ -1,0 +1,175 @@
+/**
+ * SOP Canvas Card Styles
+ * Inline editable card within chat messages
+ */
+
+.sop-canvas-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(249, 250, 251, 0.95));
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  border-radius: 12px;
+  padding: 0;
+  margin: 1rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.sop-canvas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(to right, #eff6ff, #eef2ff);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.sop-canvas-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sop-canvas-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sop-canvas-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.25rem;
+  background: rgba(249, 250, 251, 0.5);
+  border-bottom: 1px solid rgba(229, 231, 235, 0.3);
+}
+
+.sop-canvas-content {
+  padding: 1.5rem 1.25rem;
+  min-height: 200px;
+  max-height: 600px;
+  overflow-y: auto;
+  background: white;
+}
+
+.sop-canvas-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sop-canvas-content::-webkit-scrollbar-track {
+  background: rgba(243, 244, 246, 0.5);
+  border-radius: 4px;
+}
+
+.sop-canvas-content::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 4px;
+}
+
+.sop-canvas-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.7);
+}
+
+.sop-canvas-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  background: rgba(249, 250, 251, 0.8);
+  border-top: 1px solid rgba(229, 231, 235, 0.3);
+}
+
+/* TipTap editor styles */
+.sop-canvas-editor {
+  outline: none;
+  min-height: 200px;
+  color: #1f2937;
+  line-height: 1.7;
+}
+
+.sop-canvas-editor h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+  color: #111827;
+}
+
+.sop-canvas-editor h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.75rem;
+  color: #1f2937;
+}
+
+.sop-canvas-editor h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  color: #374151;
+}
+
+.sop-canvas-editor p {
+  margin: 0.75rem 0;
+  color: #4b5563;
+}
+
+.sop-canvas-editor ul,
+.sop-canvas-editor ol {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.sop-canvas-editor li {
+  margin: 0.5rem 0;
+  color: #4b5563;
+}
+
+.sop-canvas-editor code {
+  background: rgba(243, 244, 246, 0.8);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: #dc2626;
+}
+
+.sop-canvas-editor pre {
+  background: rgba(243, 244, 246, 0.8);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.sop-canvas-editor strong {
+  font-weight: 600;
+  color: #111827;
+}
+
+.sop-canvas-editor em {
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .sop-canvas-card {
+    border-radius: 8px;
+  }
+
+  .sop-canvas-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .sop-canvas-content {
+    padding: 1rem;
+    max-height: 400px;
+  }
+
+  .sop-canvas-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

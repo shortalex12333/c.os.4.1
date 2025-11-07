@@ -1,0 +1,58 @@
+# Caddy config for LAN-accessible hostname via mDNS
+# Serves on celesteos.local for all devices on LAN
+
+# Main server: celesteos.local (works with mDNS across LAN)
+celesteos.local:80 {
+    reverse_proxy localhost:8082 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+
+        # WebSocket support for HMR
+        header_up Upgrade {http.request.header.Upgrade}
+        header_up Connection {http.request.header.Connection}
+    }
+}
+
+# Optional: Single-label hostname (requires /etc/hosts entry)
+celesteos:80 {
+    reverse_proxy localhost:8082 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+
+        # WebSocket support for HMR
+        header_up Upgrade {http.request.header.Upgrade}
+        header_up Connection {http.request.header.Connection}
+    }
+}
+
+# Catch-all: Handle direct IP access (192.168.1.44)
+:80 {
+    reverse_proxy localhost:8082 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+
+        # WebSocket support for HMR
+        header_up Upgrade {http.request.header.Upgrade}
+        header_up Connection {http.request.header.Connection}
+    }
+}
+
+# Optional: HTTPS with self-signed cert (uncomment to use)
+# celesteos {
+#     tls internal
+#
+#     reverse_proxy localhost:8082 {
+#         header_up Host {host}
+#         header_up X-Real-IP {remote}
+#         header_up X-Forwarded-For {remote}
+#         header_up X-Forwarded-Proto {scheme}
+#         header_up Upgrade {http.request.header.Upgrade}
+#         header_up Connection {http.request.header.Connection}
+#     }
+# }

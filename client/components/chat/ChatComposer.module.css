@@ -1,0 +1,49 @@
+/* ChatComposer Mobile-First Styles */
+
+.composer {
+  /* Fixed positioning handled by parent inline styles */
+}
+
+.composerGlass {
+  /* Glass morphism styles - backdrop-blur and bg handled by Tailwind classes */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.composerInput {
+  /* iOS touch optimizations */
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+
+  /* Auto-resize textarea */
+  field-sizing: content;
+  overflow-y: hidden;
+}
+
+.composerInput:focus {
+  outline: 2px solid #0A84FF;
+  outline-offset: -2px;
+}
+
+.sendButton {
+  /* Touch target optimization */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+
+  /* Ensure proper flex centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sendButton:active {
+  transform: scale(0.95);
+}
+
+/* Dark mode adjustments */
+.dark .composerInput {
+  color: white;
+}
+
+.dark .composerInput::placeholder {
+  color: rgba(156, 163, 175, 0.8);
+}

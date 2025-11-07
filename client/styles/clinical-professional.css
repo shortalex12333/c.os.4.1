@@ -1,0 +1,397 @@
+/* 
+ * CELESTE7 CLINICAL PROFESSIONAL INTERFACE
+ * Rolex-Equivalent Precision for Chief Engineers
+ * "Your vessel's intelligence, instantly here"
+ */
+
+/* ========== BRAND VALUES IMPLEMENTATION ========== */
+:root {
+  /* SIMPLICITY - Core brand value #1 */
+  --clinical-white: #FFFFFF;
+  --clinical-off-white: #F8F8F0;
+  --clinical-light-gray: #F4F4F4;
+  --clinical-background: #FAFAFA;
+  
+  /* DATA/AI - Core brand value #2 */
+  --clinical-deep-black: #181818;
+  --clinical-medium-black: #242424;
+  --clinical-pure-black: #020202;
+  
+  /* PREMIUM - Core brand value #3 */
+  --clinical-primary-blue: #0070FF;
+  --clinical-secondary-blue: #00A4FF;
+  --clinical-accent-blue: #BADDE9;
+  --clinical-border-gray: #E5E5E5;
+  
+  /* Professional spacing - precise, not approximated */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  
+  /* Chief Engineer readable typography */
+  --font-primary: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  
+  /* Crisis-ready sizing */
+  --text-crisis: 24px;
+  --text-large: 20px;
+  --text-body: 16px;
+  --text-small: 14px;
+  --text-tiny: 12px;
+  
+  /* Professional shadows - minimal */
+  --shadow-minimal: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  /* Emergency states */
+  --clinical-success: #10B981;
+  --clinical-warning: #F97316;
+  --clinical-error: #EF4444;
+}
+
+/* ========== CLINICAL RESET ========== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--clinical-white);
+  color: var(--clinical-deep-black);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove ALL decorative animations */
+*, *::before, *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ========== CLINICAL LAYOUT SYSTEM ========== */
+.clinical-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-lg);
+}
+
+.clinical-header {
+  background: var(--clinical-white);
+  border-bottom: 2px solid var(--clinical-border-gray);
+  padding: var(--space-md) var(--space-lg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.clinical-main {
+  min-height: calc(100vh - 120px);
+  background: var(--clinical-off-white);
+  padding: var(--space-xl);
+}
+
+/* ========== CHIEF ENGINEER TYPOGRAPHY ========== */
+.clinical-title {
+  font-size: var(--text-crisis);
+  font-weight: 700;
+  color: var(--clinical-deep-black);
+  margin-bottom: var(--space-md);
+  line-height: 1.2;
+}
+
+.clinical-subtitle {
+  font-size: var(--text-large);
+  font-weight: 600;
+  color: var(--clinical-medium-black);
+  margin-bottom: var(--space-sm);
+}
+
+.clinical-body {
+  font-size: var(--text-body);
+  color: var(--clinical-deep-black);
+  margin-bottom: var(--space-md);
+}
+
+.clinical-data {
+  font-family: var(--font-mono);
+  font-size: var(--text-body);
+  background: var(--clinical-light-gray);
+  padding: var(--space-sm);
+  border-radius: 4px;
+  border: 1px solid var(--clinical-border-gray);
+}
+
+/* ========== PROFESSIONAL INTERFACE ELEMENTS ========== */
+.clinical-card {
+  background: var(--clinical-white);
+  border: 2px solid var(--clinical-border-gray);
+  border-radius: 8px;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.clinical-button {
+  background: var(--clinical-primary-blue);
+  color: var(--clinical-white);
+  border: none;
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--text-body);
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.clinical-button:hover {
+  background: #0056CC;
+}
+
+.clinical-button-secondary {
+  background: var(--clinical-white);
+  color: var(--clinical-primary-blue);
+  border: 2px solid var(--clinical-primary-blue);
+}
+
+.clinical-button-secondary:hover {
+  background: var(--clinical-off-white);
+}
+
+.clinical-input {
+  width: 100%;
+  padding: var(--space-md);
+  border: 2px solid var(--clinical-border-gray);
+  border-radius: 6px;
+  font-size: var(--text-body);
+  font-family: var(--font-primary);
+  background: var(--clinical-white);
+  color: var(--clinical-deep-black);
+  outline: none;
+}
+
+.clinical-input:focus {
+  border-color: var(--clinical-primary-blue);
+  box-shadow: 0 0 0 3px rgba(0, 112, 255, 0.1);
+}
+
+/* ========== CRISIS-READY STATES ========== */
+.status-success {
+  background: var(--clinical-success);
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.status-warning {
+  background: var(--clinical-warning);
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.status-error {
+  background: var(--clinical-error);
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* ========== DATA DISPLAY SYSTEM ========== */
+.clinical-data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-lg);
+  margin: var(--space-lg) 0;
+}
+
+.clinical-metric {
+  background: var(--clinical-white);
+  border: 1px solid var(--clinical-border-gray);
+  padding: var(--space-lg);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.clinical-metric-value {
+  font-size: var(--text-crisis);
+  font-weight: 700;
+  color: var(--clinical-primary-blue);
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.clinical-metric-label {
+  font-size: var(--text-small);
+  color: var(--clinical-medium-black);
+  font-weight: 500;
+}
+
+/* ========== SOLUTION DISPLAY ========== */
+.clinical-solution {
+  background: var(--clinical-white);
+  border-left: 4px solid var(--clinical-primary-blue);
+  padding: var(--space-lg);
+  margin: var(--space-lg) 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.clinical-solution-title {
+  font-size: var(--text-large);
+  font-weight: 700;
+  color: var(--clinical-deep-black);
+  margin-bottom: var(--space-md);
+}
+
+.clinical-solution-steps {
+  list-style: none;
+  counter-reset: step-counter;
+}
+
+.clinical-solution-steps li {
+  counter-increment: step-counter;
+  margin-bottom: var(--space-md);
+  padding-left: var(--space-xl);
+  position: relative;
+}
+
+.clinical-solution-steps li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: var(--clinical-primary-blue);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-small);
+  font-weight: 700;
+}
+
+/* ========== CONFIDENCE DISPLAY ========== */
+.clinical-confidence {
+  background: var(--clinical-light-gray);
+  border: 1px solid var(--clinical-border-gray);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.clinical-confidence-score {
+  font-weight: 700;
+  color: var(--clinical-primary-blue);
+}
+
+/* ========== SOURCE DOCUMENTATION ========== */
+.clinical-source {
+  background: var(--clinical-background);
+  border: 1px solid var(--clinical-border-gray);
+  padding: var(--space-md);
+  border-radius: 4px;
+  margin-top: var(--space-md);
+}
+
+.clinical-source-title {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--clinical-medium-black);
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.clinical-source-details {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--clinical-deep-black);
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 768px) {
+  .clinical-container {
+    padding: var(--space-md);
+  }
+  
+  .clinical-main {
+    padding: var(--space-lg);
+  }
+  
+  .clinical-title {
+    font-size: var(--text-large);
+  }
+  
+  .clinical-data-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== DARK MODE FOR NIGHT OPERATIONS ========== */
+.clinical-dark {
+  --clinical-white: #181818;
+  --clinical-off-white: #242424;
+  --clinical-light-gray: #2A2A2A;
+  --clinical-background: #1E1E1E;
+  --clinical-deep-black: #FFFFFF;
+  --clinical-medium-black: #E5E5E5;
+  --clinical-border-gray: #404040;
+}
+
+.clinical-dark body {
+  background-color: var(--clinical-white);
+  color: var(--clinical-deep-black);
+}
+
+/* ========== ACCESSIBILITY ENHANCEMENTS ========== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .clinical-card {
+    border-width: 3px;
+  }
+  
+  .clinical-button {
+    border: 2px solid transparent;
+  }
+  
+  .clinical-input {
+    border-width: 3px;
+  }
+}
+
+/* ========== FOCUS MANAGEMENT FOR KEYBOARD NAVIGATION ========== */
+.clinical-button:focus,
+.clinical-input:focus {
+  outline: 3px solid var(--clinical-primary-blue);
+  outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users only */
+.clinical-button:focus:not(:focus-visible),
+.clinical-input:focus:not(:focus-visible) {
+  outline: none;
+}

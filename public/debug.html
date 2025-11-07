@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Debug</title>
+</head>
+<body>
+    <h1>URL Debug Info</h1>
+    <pre id="output"></pre>
+    <script>
+        const info = {
+            hostname: window.location.hostname,
+            origin: window.location.origin,
+            href: window.location.href,
+            protocol: window.location.protocol,
+            port: window.location.port,
+            webhookUrl: `${window.location.origin}/webhook`,
+            isExternal: window.location.hostname.includes('celeste7.ai')
+        };
+        document.getElementById('output').textContent = JSON.stringify(info, null, 2);
+        console.log('URL DEBUG:', info);
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+# Caddy configuration for celesteos.local reverse proxy
+# Caddy is a simpler alternative to nginx with automatic HTTPS
+#
+# Installation:
+# 1. Install Caddy: brew install caddy (macOS) or apt install caddy (Linux)
+# 2. Add to /etc/hosts: 192.168.x.x celesteos.local
+# 3. Run: caddy run --config /path/to/this/Caddyfile
+#
+# For HTTPS with self-signed certificate (optional):
+# Run: caddy run --config /path/to/this/Caddyfile --adapter caddyfile
+
+# HTTPS with mkcert trusted certificates for Microsoft OAuth
+celesteos.local, 192.168.1.44, *.loca.lt {
+    tls localhost.pem localhost-key.pem  # Uses mkcert trusted certificates
+
+    # Supabase backend proxy
+    handle /supabase/* {
+        uri strip_prefix /supabase
+        reverse_proxy localhost:54321
+    }
+
+    # JWT document service proxy
+    handle /jwt/* {
+        uri strip_prefix /jwt
+        reverse_proxy localhost:8098
+    }
+
+    # Default: Frontend (Vite)
+    handle {
+        reverse_proxy localhost:8083 {
+            # Headers for proper proxying
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+            header_up X-Forwarded-Proto {scheme}
+
+            # WebSocket support for HMR
+            header_up Upgrade {http.request.header.Upgrade}
+            header_up Connection {http.request.header.Connection}
+        }
+    }
+}
+
+# HTTPS localhost.direct with automatic real SSL certificate
+localhost.direct {
+    # Caddy will automatically get a real SSL certificate from Let's Encrypt
+
+    reverse_proxy localhost:8083 {
+        # Headers for proper proxying
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+
+        # WebSocket support for HMR
+        header_up Upgrade {http.request.header.Upgrade}
+        header_up Connection {http.request.header.Connection}
+    }
+}
+
+# Alternative: HTTPS with self-signed certificate (port 443)
+# Uncomment below to use HTTPS instead of HTTP
+#
+# celesteos.local {
+#     tls internal  # Uses Caddy's internal CA for self-signed certificate
+#
+#     reverse_proxy localhost:8082 {
+#         header_up Host {host}
+#         header_up X-Real-IP {remote}
+#         header_up X-Forwarded-For {remote}
+#         header_up X-Forwarded-Proto {scheme}
+#         header_up Upgrade {http.request.header.Upgrade}
+#         header_up Connection {http.request.header.Connection}
+#     }
+# }
+
+# HTTP on port 8081 (non-privileged, works on LAN)
+:8081 {
+    reverse_proxy localhost:8083 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+        header_up Upgrade {http.request.header.Upgrade}
+        header_up Connection {http.request.header.Connection}
+    }
+}
+
+# Optional: Redirect www to non-www
+www.celesteos.local:80 {
+    redir http://celesteos.local{uri} permanent
+}

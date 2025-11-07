@@ -1,0 +1,71 @@
+/* Sidebar Glass - Scoped color reset */
+.celSidebar { 
+  color: rgba(255,255,255,0.92) !important; 
+}
+
+.celSidebar button,
+.celSidebar span,
+.celSidebar div,
+.celSidebar p,
+.celSidebar label { 
+  color: inherit !important; 
+}
+
+.celSidebar a,
+.celSidebar a:visited,
+.celSidebar a:hover,
+.celSidebar a:active { 
+  color: inherit !important; 
+  text-decoration: none !important; 
+}
+
+.celSidebar svg { 
+  color: inherit !important; 
+  stroke: currentColor !important; 
+  fill: none !important; 
+}
+
+.celSidebar [data-active="true"] { 
+  color: rgba(255,255,255,1) !important; 
+}
+
+/* Neutralize Tailwind Typography if present */
+.celSidebar :where(.prose, .prose *) { 
+  color: inherit !important; 
+}
+
+/* Guard against stray utility classes */
+.celSidebar [class*="text-"]:not([data-allow-color="true"]) { 
+  color: inherit !important; 
+}
+
+/* Override any button color inheritance */
+.celSidebar button {
+  color: inherit !important;
+}
+
+/* Force white on all text elements */
+.celSidebar span,
+.celSidebar div,
+.celSidebar p,
+.celSidebar h1,
+.celSidebar h2,
+.celSidebar h3 {
+  color: inherit !important;
+}
+
+/* Router/NavLink active state override */
+.celSidebar .active,
+.celSidebar [aria-current="page"] {
+  color: inherit !important;
+}
+
+/* Override Tailwind text utilities specifically */
+.celSidebar .text-gray-500,
+.celSidebar .text-gray-400,
+.celSidebar .text-gray-600,
+.celSidebar .text-gray-700,
+.celSidebar .text-slate-500,
+.celSidebar .text-blue-600 {
+  color: inherit !important;
+}

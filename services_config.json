@@ -1,0 +1,186 @@
+{
+  "services": {
+    "podman": {
+      "enabled": true,
+      "name": "Podman Machine",
+      "description": "Container runtime for Supabase",
+      "ports": [],
+      "commands": {
+        "start": "podman machine start",
+        "stop": "podman machine stop",
+        "status": "podman machine info | grep 'machinestate: Running'"
+      },
+      "wait_time": 10,
+      "critical": true
+    },
+    "supabase": {
+      "enabled": true,
+      "name": "Supabase",
+      "description": "Backend services (Auth, Database, Storage)",
+      "ports": {
+        "api_gateway": 54321,
+        "postgresql": 54322,
+        "studio": 54323,
+        "inbucket": 54324,
+        "analytics": 54327
+      },
+      "commands": {
+        "start": "supabase start",
+        "stop": "supabase stop",
+        "status": "supabase status"
+      },
+      "health_endpoints": {
+        "auth": "http://127.0.0.1:54321/auth/v1/health",
+        "rest_api": "http://127.0.0.1:54321/rest/v1/",
+        "studio": "http://localhost:54323"
+      },
+      "depends_on": ["podman"],
+      "wait_time": 15,
+      "critical": true
+    },
+    "vite": {
+      "enabled": true,
+      "name": "Vite Dev Server",
+      "description": "Frontend development server",
+      "ports": {
+        "dev_server": 8082
+      },
+      "commands": {
+        "start": "npm run dev",
+        "stop": "pkill -f 'vite'",
+        "status": "curl -s -o /dev/null -w '%{http_code}' http://localhost:8082"
+      },
+      "health_endpoints": {
+        "main": "http://localhost:8082"
+      },
+      "wait_time": 5,
+      "critical": true
+    },
+    "caddy": {
+      "enabled": true,
+      "name": "Caddy HTTPS Proxy",
+      "description": "Reverse proxy with HTTPS support",
+      "ports": {
+        "http": 80,
+        "https": 443,
+        "admin": 2019
+      },
+      "commands": {
+        "start": "caddy run --config dev-proxy/Caddyfile-https",
+        "stop": "caddy stop",
+        "status": "curl -k -s -o /dev/null -w '%{http_code}' https://celesteos.local"
+      },
+      "health_endpoints": {
+        "https": "https://celesteos.local",
+        "http": "http://celesteos.local"
+      },
+      "depends_on": ["vite"],
+      "wait_time": 3,
+      "critical": false
+    },
+    "mdns": {
+      "enabled": true,
+      "name": "mDNS Discovery",
+      "description": "Network service discovery for LAN access",
+      "ports": [],
+      "commands": {
+        "start": "python3 infra/mdns/advertise-mdns.py 443",
+        "stop": "pkill -f 'advertise-mdns.py'",
+        "status": "ps aux | grep -q '[a]dvertise-mdns.py'"
+      },
+      "depends_on": ["caddy"],
+      "wait_time": 2,
+      "critical": false
+    },
+    "redis": {
+      "enabled": false,
+      "name": "Redis",
+      "description": "In-memory data store (optional)",
+      "ports": {
+        "main": 6379
+      },
+      "commands": {
+        "start": "redis-server",
+        "stop": "redis-cli shutdown",
+        "status": "redis-cli ping"
+      },
+      "wait_time": 2,
+      "critical": false
+    },
+    "n8n": {
+      "enabled": true,
+      "name": "n8n Workflow Automation",
+      "description": "Workflow automation and webhook processing",
+      "ports": {
+        "web_ui": 5678
+      },
+      "commands": {
+        "start": "n8n start",
+        "stop": "pkill -f 'n8n'",
+        "status": "curl -s -o /dev/null -w '%{http_code}' http://localhost:5678"
+      },
+      "health_endpoints": {
+        "main": "http://localhost:5678"
+      },
+      "depends_on": ["supabase"],
+      "wait_time": 5,
+      "critical": true
+    },
+    "fastapi": {
+      "enabled": true,
+      "name": "FastAPI Document Processing",
+      "description": "Document search and yacht recommendation API",
+      "ports": {
+        "api": 8000
+      },
+      "commands": {
+        "start": "python3 api/main.py",
+        "stop": "pkill -f 'api/main.py'",
+        "status": "curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/health"
+      },
+      "health_endpoints": {
+        "main": "http://localhost:8000",
+        "health": "http://localhost:8000/health"
+      },
+      "depends_on": ["supabase"],
+      "wait_time": 5,
+      "critical": true
+    },
+    "yacht_frontend": {
+      "enabled": true,
+      "name": "Yacht Search Frontend",
+      "description": "React frontend for yacht search and recommendations",
+      "ports": {
+        "dev_server": 3000
+      },
+      "commands": {
+        "start": "cd yacht-frontend && npm start",
+        "stop": "pkill -f 'yacht-frontend'",
+        "status": "curl -s -o /dev/null -w '%{http_code}' http://localhost:3000"
+      },
+      "health_endpoints": {
+        "main": "http://localhost:3000"
+      },
+      "depends_on": ["fastapi"],
+      "wait_time": 8,
+      "critical": false
+    }
+  },
+  "launch_order": ["podman", "supabase", "n8n", "fastapi", "yacht_frontend", "vite", "caddy", "mdns"],
+  "environment": {
+    "NODE_ENV": "development",
+    "VITE_PORT": "8082",
+    "SUPABASE_URL": "http://127.0.0.1:54321",
+    "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+  },
+  "health_check": {
+    "interval": 30,
+    "timeout": 5,
+    "max_retries": 3
+  },
+  "logging": {
+    "enabled": true,
+    "log_file": "celesteos_launcher.log",
+    "log_level": "INFO"
+  }
+}

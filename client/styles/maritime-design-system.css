@@ -1,0 +1,423 @@
+/* 🛥️ PREMIUM MARITIME DESIGN SYSTEM */
+
+/* ========== FONT IMPORTS ========== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+/* ========== MARITIME COLOR PALETTE ========== */
+:root {
+  /* Maritime Primary - Ocean Blues */
+  --maritime-deep-ocean: #0a1929;
+  --maritime-ocean: #1e3a8a;
+  --maritime-sea: #2563eb;
+  --maritime-horizon: #3b82f6;
+  --maritime-sky: #60a5fa;
+  --maritime-foam: #93c5fd;
+  
+  /* Maritime Accent - Naval Gold & Silver */
+  --maritime-gold: #f59e0b;
+  --maritime-gold-light: #fbbf24;
+  --maritime-silver: #e5e7eb;
+  --maritime-chrome: #9ca3af;
+  
+  /* Maritime Status Colors */
+  --maritime-success: #059669; /* Port/Starboard Green */
+  --maritime-warning: #dc2626; /* Port/Emergency Red */
+  --maritime-alert: #ea580c; /* Navigation Orange */
+  --maritime-info: --maritime-sea;
+  
+  /* Maritime Neutrals - Yacht Whites & Grays */
+  --maritime-white: #ffffff;
+  --maritime-pearl: #f9fafb;
+  --maritime-platinum: #f3f4f6;
+  --maritime-steel: #e5e7eb;
+  --maritime-graphite: #6b7280;
+  --maritime-charcoal: #374151;
+  --maritime-black: #111827;
+  
+  /* Environmental Lighting Variables */
+  --env-brightness: 1;
+  --env-contrast: 1;
+  --env-saturation: 1;
+}
+
+/* ========== ENVIRONMENTAL LIGHTING MODES ========== */
+.env-bridge-day {
+  --env-brightness: 1.2;
+  --env-contrast: 1.4;
+  --env-saturation: 0.9;
+}
+
+.env-bridge-night {
+  --env-brightness: 0.3;
+  --env-contrast: 0.8;
+  --env-saturation: 0.7;
+  --maritime-white: #1f2937;
+  --maritime-pearl: #111827;
+  --maritime-black: #f9fafb;
+}
+
+.env-engine-room {
+  --env-brightness: 0.8;
+  --env-contrast: 1.2;
+  --env-saturation: 0.6;
+  filter: sepia(0.1);
+}
+
+.env-main-deck {
+  --env-brightness: 1.1;
+  --env-contrast: 1.1;
+  --env-saturation: 1.1;
+}
+
+.env-outside-bright {
+  --env-brightness: 1.3;
+  --env-contrast: 1.5;
+  --env-saturation: 1.2;
+}
+
+/* ========== PREMIUM TYPOGRAPHY SYSTEM ========== */
+
+.maritime-typography {
+  /* Display Typography - For Major Headers */
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --text-display-xl: 3.75rem; /* 60px */
+  --text-display-lg: 3rem;    /* 48px */
+  --text-display-md: 2.25rem; /* 36px */
+  --text-display-sm: 1.875rem; /* 30px */
+  
+  /* Heading Typography */
+  --text-h1: 2.25rem; /* 36px */
+  --text-h2: 1.875rem; /* 30px */
+  --text-h3: 1.5rem;   /* 24px */
+  --text-h4: 1.25rem;  /* 20px */
+  --text-h5: 1.125rem; /* 18px */
+  --text-h6: 1rem;     /* 16px */
+  
+  /* Body Typography */
+  --text-lg: 1.125rem; /* 18px */
+  --text-base: 1rem;   /* 16px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-xs: 0.75rem;  /* 12px */
+  
+  /* Code Typography */
+  --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+  
+  /* Font Weights */
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+  --font-black: 900;
+}
+
+/* ========== PREMIUM SHADOWS & DEPTH ========== */
+.maritime-shadows {
+  /* Yacht-Grade Shadow System */
+  --shadow-xs: 0 1px 2px rgba(10, 25, 41, 0.05);
+  --shadow-sm: 0 1px 3px rgba(10, 25, 41, 0.1), 0 1px 2px rgba(10, 25, 41, 0.06);
+  --shadow-md: 0 4px 6px rgba(10, 25, 41, 0.07), 0 2px 4px rgba(10, 25, 41, 0.06);
+  --shadow-lg: 0 10px 15px rgba(10, 25, 41, 0.1), 0 4px 6px rgba(10, 25, 41, 0.05);
+  --shadow-xl: 0 20px 25px rgba(10, 25, 41, 0.1), 0 10px 10px rgba(10, 25, 41, 0.04);
+  --shadow-2xl: 0 25px 50px rgba(10, 25, 41, 0.15);
+  --shadow-inner: inset 0 2px 4px rgba(10, 25, 41, 0.06);
+  
+  /* Glow Effects */
+  --glow-sm: 0 0 5px var(--maritime-sea);
+  --glow-md: 0 0 10px var(--maritime-sea);
+  --glow-lg: 0 0 20px var(--maritime-sea);
+  --glow-gold: 0 0 15px var(--maritime-gold);
+  
+  /* Navigation Light Effects */
+  --nav-light-port: 0 0 20px #059669;
+  --nav-light-starboard: 0 0 20px #dc2626;
+  --nav-light-stern: 0 0 20px #ffffff;
+}
+
+/* ========== PREMIUM BORDER RADIUS ========== */
+.maritime-radius {
+  --radius-none: 0;
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius-md: 0.375rem;  /* 6px */
+  --radius-lg: 0.5rem;    /* 8px */
+  --radius-xl: 0.75rem;   /* 12px */
+  --radius-2xl: 1rem;     /* 16px */
+  --radius-3xl: 1.5rem;   /* 24px */
+  --radius-full: 9999px;
+  
+  /* Maritime-Specific Radius */
+  --radius-porthole: 50%;
+  --radius-yacht: 1.25rem; /* 20px - Signature yacht curve */
+}
+
+/* ========== PREMIUM ANIMATIONS ========== */
+@keyframes maritimeWave {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-3px) rotate(0.5deg); }
+  50% { transform: translateY(-5px) rotate(0deg); }
+  75% { transform: translateY(-3px) rotate(-0.5deg); }
+}
+
+@keyframes maritimeGlow {
+  0%, 100% { box-shadow: var(--glow-sm); }
+  50% { box-shadow: var(--glow-md); }
+}
+
+@keyframes maritimePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
+}
+
+@keyframes maritimeSlide {
+  0% { transform: translateX(-100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes maritimeFade {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes compassSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========== GRADIENT SYSTEMS ========== */
+.maritime-gradients {
+  /* Ocean Gradients */
+  --gradient-ocean: linear-gradient(135deg, var(--maritime-deep-ocean) 0%, var(--maritime-ocean) 100%);
+  --gradient-horizon: linear-gradient(180deg, var(--maritime-sky) 0%, var(--maritime-sea) 100%);
+  --gradient-wave: linear-gradient(90deg, var(--maritime-foam) 0%, var(--maritime-sea) 50%, var(--maritime-foam) 100%);
+  
+  /* Metallic Gradients */
+  --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%);
+  --gradient-silver: linear-gradient(135deg, #e5e7eb 0%, #ffffff 50%, #e5e7eb 100%);
+  --gradient-chrome: linear-gradient(135deg, #9ca3af 0%, #e5e7eb 50%, #9ca3af 100%);
+  
+  /* Glass Effects */
+  --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  --gradient-glass-dark: linear-gradient(135deg, rgba(10,25,41,0.1) 0%, rgba(10,25,41,0.05) 100%);
+}
+
+/* ========== INTERACTIVE STATES ========== */
+.maritime-interactive {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.maritime-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.maritime-interactive:active {
+  transform: translateY(0);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.maritime-glow:hover {
+  animation: maritimeGlow 2s ease-in-out infinite;
+}
+
+.maritime-float {
+  animation: maritimeWave 6s ease-in-out infinite;
+}
+
+/* ========== COMPONENT BASE STYLES ========== */
+.maritime-card {
+  background: var(--gradient-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-yacht);
+  box-shadow: var(--shadow-lg);
+}
+
+.maritime-button {
+  background: var(--gradient-ocean);
+  color: var(--maritime-white);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.5rem;
+  font-weight: var(--font-semibold);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-md);
+}
+
+.maritime-button:hover {
+  background: var(--gradient-horizon);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.maritime-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1rem;
+  color: var(--maritime-white);
+  backdrop-filter: blur(8px);
+}
+
+.maritime-input:focus {
+  outline: none;
+  border-color: var(--maritime-sea);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ========== OPACITY LEVELS ========== */
+.maritime-opacity {
+  --opacity-0: 0;
+  --opacity-5: 0.05;
+  --opacity-10: 0.1;
+  --opacity-20: 0.2;
+  --opacity-25: 0.25;
+  --opacity-30: 0.3;
+  --opacity-40: 0.4;
+  --opacity-50: 0.5;
+  --opacity-60: 0.6;
+  --opacity-70: 0.7;
+  --opacity-75: 0.75;
+  --opacity-80: 0.8;
+  --opacity-90: 0.9;
+  --opacity-95: 0.95;
+  --opacity-100: 1;
+}
+
+/* ========== RESPONSIVE BREAKPOINTS ========== */
+.maritime-responsive {
+  /* Mobile First Approach */
+  --mobile: 320px;
+  --tablet: 768px;
+  --laptop: 1024px;
+  --desktop: 1280px;
+  --wide: 1920px;
+}
+
+/* ========== ACCESSIBILITY ENHANCEMENTS ========== */
+.maritime-a11y {
+  /* High Contrast Mode Support */
+  --contrast-high: 1.5;
+  --contrast-low: 0.8;
+}
+
+@media (prefers-contrast: high) {
+  :root {
+    --env-contrast: var(--contrast-high);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========== DARK MODE OVERRIDES ========== */
+.dark {
+  --maritime-white: #111827;
+  --maritime-pearl: #1f2937;
+  --maritime-platinum: #374151;
+  --maritime-steel: #4b5563;
+  --maritime-graphite: #9ca3af;
+  --maritime-charcoal: #e5e7eb;
+  --maritime-black: #f9fafb;
+}
+
+/* ========== UTILITY CLASSES ========== */
+.maritime-glass {
+  background: var(--gradient-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.maritime-chrome {
+  background: var(--gradient-chrome);
+  box-shadow: var(--shadow-inner);
+}
+
+.maritime-gold-accent {
+  background: var(--gradient-gold);
+  color: var(--maritime-black);
+}
+
+.maritime-glow-port {
+  box-shadow: var(--nav-light-port);
+}
+
+.maritime-glow-starboard {
+  box-shadow: var(--nav-light-starboard);
+}
+
+.maritime-text-display {
+  font-family: var(--font-display);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+}
+
+.maritime-text-mono {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+/* ========== COMPONENT SPECIFIC STYLES ========== */
+.yacht-logo {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navigation-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: maritimePulse 2s ease-in-out infinite;
+}
+
+.navigation-light.port {
+  background: #059669;
+  box-shadow: var(--nav-light-port);
+}
+
+.navigation-light.starboard {
+  background: #dc2626;
+  box-shadow: var(--nav-light-starboard);
+}
+
+.code-terminal {
+  background: var(--maritime-deep-ocean);
+  border: 1px solid var(--maritime-ocean);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-mono);
+  padding: 1.5rem;
+  color: var(--maritime-foam);
+  box-shadow: var(--shadow-inner);
+}
+
+.code-terminal::before {
+  content: "◉ ◉ ◉";
+  color: var(--maritime-chrome);
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
+}
+
+/* Apply environmental filtering */
+body {
+  filter: 
+    brightness(var(--env-brightness))
+    contrast(var(--env-contrast))
+    saturate(var(--env-saturation));
+}

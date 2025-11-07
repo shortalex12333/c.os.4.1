@@ -1,0 +1,197 @@
+{
+  "name": "Email Search Mode - Complete Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// NODE 1: EMAIL CONSOLIDATOR\n// ==========================================\n// Purpose: Merge duplicate emails from same conversation thread\n// Input: ATLAS email search result\n// Output: Unique emails (one per conversation)\n\nconst inputData = $input.first().json;\n\nconst emails = inputData.emails || [];\n\nif (emails.length === 0) {\n  console.log('[EMAIL CONSOLIDATOR] No emails to consolidate');\n  return [{ json: inputData }];\n}\n\n// Group by conversation ID\nconst conversationMap = new Map();\n\nemails.forEach(email => {\n  const convId = email.conversationId || email.id;\n\n  if (!conversationMap.has(convId)) {\n    conversationMap.set(convId, email);\n  } else {\n    // Keep most recent email in thread\n    const existing = conversationMap.get(convId);\n    const existingDate = new Date(existing.receivedDateTime || 0);\n    const newDate = new Date(email.receivedDateTime || 0);\n\n    if (newDate > existingDate) {\n      conversationMap.set(convId, email);\n    }\n  }\n});\n\nconst consolidatedEmails = Array.from(conversationMap.values());\n\nconsole.log(`[EMAIL CONSOLIDATOR] Consolidated ${emails.length} emails into ${consolidatedEmails.length} unique conversations`);\n\nreturn [{\n  json: {\n    ...inputData,\n    emails: consolidatedEmails\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        300
+      ],
+      "id": "node1_consolidator",
+      "name": "1. Email Consolidator"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// NODE 2: EMAIL PREVIEW GENERATOR\n// ==========================================\n// Purpose: Create clean 500-char previews from email body\n// Input: Consolidated emails\n// Output: Emails with content_preview field\n\nconst data = $input.first().json;\nconst emails = data.emails || [];\n\n// Helper function to trim at word boundary\nfunction trimToWordBoundary(text, maxLength = 500) {\n  if (!text) return '';\n\n  // Clean up whitespace and HTML\n  text = text\n    .replace(/<[^>]*>/g, '') // Strip HTML tags\n    .replace(/\\s+/g, ' ')   // Normalize whitespace\n    .trim();\n\n  if (text.length <= maxLength) {\n    return text;\n  }\n\n  // Find last space before maxLength\n  let trimPoint = text.lastIndexOf(' ', maxLength);\n\n  if (trimPoint === -1) {\n    trimPoint = maxLength;\n  }\n\n  return text.substring(0, trimPoint).trim() + '...';\n}\n\n// Process each email\nconst processedEmails = emails.map(email => {\n  // Priority: bodyPreview > body.content\n  const content = email.bodyPreview || email.body?.content || '';\n\n  // Generate snippet (max 500 chars)\n  const snippet = trimToWordBoundary(content, 500);\n\n  return {\n    ...email,\n    content_preview: snippet,\n    original_content: content\n  };\n});\n\nconsole.log(`[EMAIL PREVIEW] Generated previews for ${processedEmails.length} emails`);\n\nreturn [{\n  json: {\n    ...data,\n    emails: processedEmails\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        300
+      ],
+      "id": "node2_preview",
+      "name": "2. Email Preview Generator"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// NODE 3: EMAIL LINK GENERATOR\n// ==========================================\n// Purpose: Build Outlook deep links for each email\n// Input: Emails with previews\n// Output: Emails with links object\n\nconst input = $input.first().json;\nconst emails = input.emails || [];\n\n// Process emails with links\nconst linkedEmails = emails.map((email, index) => {\n  const emailId = email.id;\n\n  // Build Outlook links (format from user's example)\n  const docLink = `https://outlook.office365.com/mail/deeplink/read/${emailId}?ItemID=${emailId}&exvsurl=1`;\n  const webLink = `https://outlook.office365.com/mail/deeplink/read/${emailId}`;\n  const desktopLink = `outlook:message/${emailId}`;\n\n  // Generate solution IDs (for compatibility)\n  const solId = `email_sol_${index + 1}`;\n  const searchSolId = `search_email_${index + 1}`;\n\n  return {\n    ...email,\n    links: {\n      document: docLink,\n      web: webLink,\n      desktop: desktopLink\n    },\n    sol_id: solId,\n    search_sol_id: searchSolId\n  };\n});\n\nconsole.log(`[EMAIL LINKS] Generated links for ${linkedEmails.length} emails`);\n\nreturn [{\n  json: {\n    ...input,\n    emails: linkedEmails\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        300
+      ],
+      "id": "node3_links",
+      "name": "3. Email Link Generator"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// NODE 4: EMAIL RANKER & CATEGORIZER (ROBUST)\n// ==========================================\n// Purpose: Rank emails and categorize into tiers (max 17 visible)\n// ROBUST: Handles both ATLAS tiers AND fallback score-based sorting\n// Input: Emails with links\n// Output: Cascading structure (primary 7, other 5, all 5, hidden overflow)\n\nconst input = $input.first().json;\n\nconsole.log('[EMAIL RANKER] ========== Ranking & Categorizing Emails ==========');\n\ntry {\n  const allEmails = input.emails || [];\n\n  if (allEmails.length === 0) {\n    console.warn('[EMAIL RANKER] No emails to rank');\n    return [{ json: { ...input, primary_findings: [], other_emails: [], all_emails: [], hidden_results: { count: 0, emails: [] } } }];\n  }\n\n  // ========================================\n  // ATTEMPT 1: Use ATLAS pre-sorted tiers\n  // ========================================\n\n  const analyzed_data = input.analyzed_data || {};\n  const email_analysis = analyzed_data.email_analysis || {};\n\n  let high_confidence_ids = email_analysis.high_confidence || [];\n  let medium_confidence_ids = email_analysis.medium_confidence || [];\n  let low_confidence_ids = email_analysis.low_confidence || [];\n\n  console.log(`[EMAIL RANKER] ATLAS tiers: ${high_confidence_ids.length} high / ${medium_confidence_ids.length} medium / ${low_confidence_ids.length} low`);\n\n  // ========================================\n  // FALLBACK: If no tiers, sort by score\n  // ========================================\n\n  const hasTiers = high_confidence_ids.length > 0 || \n                   medium_confidence_ids.length > 0 || \n                   low_confidence_ids.length > 0;\n\n  if (!hasTiers && allEmails.length > 0) {\n    console.warn('[EMAIL RANKER] \u26a0\ufe0f No ATLAS tiers found, falling back to confidence score sorting');\n    console.warn('[EMAIL RANKER] email_analysis structure:', JSON.stringify(email_analysis, null, 2));\n\n    // Use ATLAS scored emails instead of raw Graph API emails\n    const atlas_result = input.atlas_result || {};\n    const scoredEmails = [\n      ...(atlas_result.solution_emails || []),\n      ...(atlas_result.other_emails || []),\n      ...(atlas_result.rescued_emails || [])\n    ];\n\n    if (scoredEmails.length > 0) {\n      console.log(`[EMAIL RANKER] Found ${scoredEmails.length} ATLAS scored emails for fallback sorting`);\n\n      // Sort by final_score or lexical_score (ATLAS field names)\n      const sortedEmails = [...scoredEmails].sort((a, b) => {\n        const scoreA = a.final_score || a.lexical_score || 0;\n        const scoreB = b.final_score || b.lexical_score || 0;\n        return scoreB - scoreA;\n      });\n\n      // Create tiers from scores (ATLAS uses 'email_id' not 'id')\n      high_confidence_ids = sortedEmails\n        .filter(e => (e.final_score || e.lexical_score || 0) >= 0.75)\n        .map(e => e.email_id);\n\n      medium_confidence_ids = sortedEmails\n        .filter(e => {\n          const score = e.final_score || e.lexical_score || 0;\n          return score >= 0.50 && score < 0.75;\n        })\n        .map(e => e.email_id);\n\n      low_confidence_ids = sortedEmails\n        .filter(e => (e.final_score || e.lexical_score || 0) < 0.50)\n        .map(e => e.email_id);\n\n      console.log(`[EMAIL RANKER] Fallback tiers created from ATLAS scores: ${high_confidence_ids.length} high / ${medium_confidence_ids.length} medium / ${low_confidence_ids.length} low`);\n    } else {\n      console.error('[EMAIL RANKER] \u26a0\ufe0f No ATLAS scored emails found, using raw email fallback');\n      // Fallback to raw emails if ATLAS scored emails unavailable\n      const sortedEmails = [...allEmails].sort((a, b) => {\n        const scoreA = a._score || a.relevanceScore || a.confidence || 0;\n        const scoreB = b._score || b.relevanceScore || b.confidence || 0;\n        return scoreB - scoreA;\n      });\n\n      high_confidence_ids = sortedEmails\n        .filter(e => (e._score || e.relevanceScore || e.confidence || 0) >= 0.75)\n        .map(e => e.id);\n\n      medium_confidence_ids = sortedEmails\n        .filter(e => {\n          const score = e._score || e.relevanceScore || e.confidence || 0;\n          return score >= 0.50 && score < 0.75;\n        })\n        .map(e => e.id);\n\n      low_confidence_ids = sortedEmails\n        .filter(e => (e._score || e.relevanceScore || e.confidence || 0) < 0.50)\n        .map(e => e.id);\n\n      console.log(`[EMAIL RANKER] Raw email fallback tiers: ${high_confidence_ids.length} high / ${medium_confidence_ids.length} medium / ${low_confidence_ids.length} low`);\n    }\n  }\n\n  // ========================================\n  // DEFENSIVE CHECK: Warn if still no tiers\n  // ========================================\n\n  const totalTiered = high_confidence_ids.length + medium_confidence_ids.length + low_confidence_ids.length;\n\n  if (totalTiered === 0 && allEmails.length > 0) {\n    console.error('[EMAIL RANKER] \ud83d\udea8 CRITICAL: No emails in any tier despite having emails!');\n    console.error('[EMAIL RANKER] Emails have no _score/relevanceScore/confidence fields');\n    console.error('[EMAIL RANKER] Sample email:', JSON.stringify(allEmails[0], null, 2));\n    console.error('[EMAIL RANKER] EMERGENCY FALLBACK: Placing all emails in medium tier');\n    \n    // Emergency fallback: treat all as medium confidence\n    medium_confidence_ids = allEmails.map(e => e.id);\n  }\n\n  // ========================================\n  // MAP IDS TO EMAIL OBJECTS\n  // ========================================\n\n  // Helper: Map IDs to email objects\n  function mapIdsToEmails(emailIds, emailsArray) {\n    return emailIds\n      .map(id => emailsArray.find(e => e.id === id))\n      .filter(Boolean); // Remove nulls\n  }\n\n  // Map IDs to full email objects\n  const highConfEmails = mapIdsToEmails(high_confidence_ids, allEmails);\n  const medConfEmails = mapIdsToEmails(medium_confidence_ids, allEmails);\n  const lowConfEmails = mapIdsToEmails(low_confidence_ids, allEmails);\n\n  // ========================================\n  // CASCADING STRUCTURE (max 17 visible)\n  // ========================================\n\n  // Primary findings: Top 7 from high confidence\n  const primary_findings = highConfEmails.slice(0, 7).map((email, i) => ({\n    ...email,\n    tier: 1,\n    stars: 5,\n    match_ratio: email._score || email.relevanceScore || 0.85\n  }));\n\n  // Other emails: Top 5 from medium confidence\n  const other_emails = medConfEmails.slice(0, 5).map((email, i) => ({\n    ...email,\n    tier: 2,\n    stars: 3,\n    match_ratio: email._score || email.relevanceScore || 0.65\n  }));\n\n  // All emails: Top 5 from low confidence\n  const all_emails = lowConfEmails.slice(0, 5).map((email, i) => ({\n    ...email,\n    tier: 3,\n    stars: 2,\n    match_ratio: email._score || email.relevanceScore || 0.45\n  }));\n\n  // ========================================\n  // HIDDEN RESULTS (overflow)\n  // ========================================\n\n  const hidden_results = {\n    count: 0,\n    emails: []\n  };\n\n  // Add overflow from high confidence (positions 8+)\n  const high_overflow = highConfEmails.slice(7).map(email => ({\n    ...email,\n    tier: 1,\n    match_ratio: email._score || 0.85\n  }));\n  hidden_results.emails.push(...high_overflow);\n\n  // Add overflow from medium confidence (positions 6+)\n  const med_overflow = medConfEmails.slice(5).map(email => ({\n    ...email,\n    tier: 2,\n    match_ratio: email._score || 0.65\n  }));\n  hidden_results.emails.push(...med_overflow);\n\n  // Add overflow from low confidence (positions 6+)\n  const low_overflow = lowConfEmails.slice(5).map(email => ({\n    ...email,\n    tier: 3,\n    match_ratio: email._score || 0.45\n  }));\n  hidden_results.emails.push(...low_overflow);\n\n  hidden_results.count = hidden_results.emails.length;\n\n  console.log('[EMAIL RANKER] ========== Categorization Complete ==========');\n  console.log(`[EMAIL RANKER] Primary (1-7): ${primary_findings.length}`);\n  console.log(`[EMAIL RANKER] Other (1-5): ${other_emails.length}`);\n  console.log(`[EMAIL RANKER] All (1-5): ${all_emails.length}`);\n  console.log(`[EMAIL RANKER] Hidden: ${hidden_results.count}`);\n\n  const output = {\n    ...input,\n    primary_findings: primary_findings,\n    other_emails: other_emails,\n    all_emails: all_emails,\n    hidden_results: hidden_results,\n    categorization_metadata: {\n      primary_count: primary_findings.length,\n      other_count: other_emails.length,\n      all_count: all_emails.length,\n      hidden_count: hidden_results.count,\n      total_count: allEmails.length,\n      showing: primary_findings.length + other_emails.length + all_emails.length\n    }\n  };\n\n  return [{ json: output }];\n\n} catch (error) {\n  console.error('[EMAIL RANKER] ERROR:', error.message);\n\n  return [{\n    json: {\n      ...input,\n      primary_findings: [],\n      other_emails: [],\n      all_emails: [],\n      hidden_results: { count: 0, emails: [] },\n      error: error.message\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        300
+      ],
+      "id": "node4_ranker",
+      "name": "4. Email Ranker & Categorizer"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// NODE 5: HANDOVER CONTEXT GENERATOR\n// ==========================================\n// Purpose: Extract entities from email content & build handover context\n// Input: Ranked emails\n// Output: Input + handoverContext object\n\nconst input = $input.first().json;\n\nconsole.log('[HANDOVER CONTEXT] ========== Generating Email Handover Context ==========');\n\nconst CONFIG = {\n  MAX_ENTITIES: 20,\n  VERSION: 'v5.1_email_adapted'\n};\n\n// ==========================================\n// ENTITY EXTRACTION (Email-specific)\n// ==========================================\n\nfunction extractEntitiesFromEmailAnalysis(data) {\n  const entities = [];\n  const seen = new Set();\n\n  try {\n    // 1. Get entities from ATLAS analyzed_data\n    const analyzed_data = data.analyzed_data || {};\n    const merged_entities = analyzed_data.entities?.merged || [];\n\n    merged_entities.forEach(e => {\n      const key = `${e.type}:${e.term.toLowerCase()}`;\n      if (!seen.has(key)) {\n        entities.push({\n          type: e.type,\n          value: e.term,\n          confidence: e.confidence || 0.85,\n          source: 'atlas_extraction'\n        });\n        seen.add(key);\n      }\n    });\n\n    // 2. Extract from original query\n    const query = data.original_query || data.query_text || data.message || '';\n\n    // Extract invoice numbers\n    const invoiceMatch = query.match(/\\b(invoice|inv)[\\s#:]*([A-Z0-9-]+)/i);\n    if (invoiceMatch && !entities.find(e => e.type === 'invoice_number')) {\n      entities.push({\n        type: 'invoice_number',\n        value: invoiceMatch[2].toUpperCase(),\n        confidence: 0.90,\n        source: 'query_analysis'\n      });\n    }\n\n    // Extract error codes\n    const errorMatch = query.match(/\\b([A-Z]{1,4}[-_]?\\d{2,5})\\b/);\n    if (errorMatch && !entities.find(e => e.type === 'error_code')) {\n      entities.push({\n        type: 'error_code',\n        value: errorMatch[1].toUpperCase(),\n        confidence: 0.85,\n        source: 'query_analysis'\n      });\n    }\n\n    // Extract company names (from email senders if available)\n    const emails = data.emails || data.primary_findings || [];\n    if (emails.length > 0) {\n      const topEmail = emails[0];\n      const senderDomain = topEmail.from?.emailAddress?.address?.split('@')[1];\n      if (senderDomain && !senderDomain.includes('gmail') && !senderDomain.includes('outlook')) {\n        const companyName = senderDomain.split('.')[0];\n        if (!entities.find(e => e.type === 'vendor')) {\n          entities.push({\n            type: 'vendor',\n            value: companyName.charAt(0).toUpperCase() + companyName.slice(1),\n            confidence: 0.75,\n            source: 'email_sender'\n          });\n        }\n      }\n    }\n\n    // Cap entities\n    if (entities.length > CONFIG.MAX_ENTITIES) {\n      return entities.slice(0, CONFIG.MAX_ENTITIES);\n    }\n\n  } catch (error) {\n    console.error('[HANDOVER CONTEXT] Error extracting entities:', error.message);\n    return [];\n  }\n\n  return entities;\n}\n\n// ==========================================\n// PATTERN DETECTION (Email-specific)\n// ==========================================\n\nconst EMAIL_PATTERN_RULES = {\n  'INVOICE_INQUIRY': {\n    required_types: ['invoice_number', 'vendor'],\n    match: 'any',\n    priority: 110\n  },\n  'VENDOR_COMMUNICATION': {\n    required_types: ['vendor', 'equipment'],\n    match: 'any',\n    priority: 90\n  },\n  'EQUIPMENT_ORDER': {\n    required_types: ['equipment', 'vendor'],\n    match: 'all',\n    priority: 85\n  },\n  'ERROR_REPORT': {\n    required_types: ['error_code', 'equipment'],\n    match: 'all',\n    priority: 100\n  },\n  'GENERAL_CORRESPONDENCE': {\n    required_types: [],\n    match: 'any',\n    priority: 20\n  }\n};\n\nfunction detectEmailPattern(entities) {\n  let bestPattern = { name: 'GENERAL_CORRESPONDENCE', priority: 0 };\n  const entityTypes = new Set(entities.map(e => e.type));\n\n  for (const [patternName, rule] of Object.entries(EMAIL_PATTERN_RULES)) {\n    let matches = true;\n\n    for (const reqType of rule.required_types || []) {\n      if (Array.isArray(reqType)) {\n        if (!reqType.some(t => entityTypes.has(t))) {\n          matches = false;\n          break;\n        }\n      } else {\n        if (!entityTypes.has(reqType)) {\n          matches = false;\n          break;\n        }\n      }\n    }\n\n    if (matches && rule.priority > bestPattern.priority) {\n      bestPattern = { name: patternName, priority: rule.priority };\n    }\n  }\n\n  return bestPattern;\n}\n\n// ==========================================\n// HELPERS\n// ==========================================\n\nfunction findEntityValue(entities, ...types) {\n  for (const type of types) {\n    const entity = entities.find(e => e.type === type);\n    if (entity) return entity.value;\n  }\n  return null;\n}\n\nfunction titleCase(str) {\n  if (!str) return '';\n  return str.split(' ')\n    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())\n    .join(' ');\n}\n\n// ==========================================\n// MAIN PROCESSING\n// ==========================================\n\ntry {\n  const entities = extractEntitiesFromEmailAnalysis(input);\n  const pattern = detectEmailPattern(entities);\n\n  console.log(`[HANDOVER CONTEXT] Extracted ${entities.length} entities`);\n  console.log(`[HANDOVER CONTEXT] Pattern: ${pattern.name}`);\n\n  // Build detected fields\n  const detectedFields = {\n    system: titleCase(findEntityValue(entities, 'equipment', 'system') || ''),\n    fault_code: (findEntityValue(entities, 'error_code', 'fault_code') || '').toUpperCase(),\n    symptoms: titleCase(findEntityValue(entities, 'symptoms') || ''),\n    vendor: titleCase(findEntityValue(entities, 'vendor', 'manufacturer') || ''),\n    invoice: (findEntityValue(entities, 'invoice_number') || '').toUpperCase(),\n    model: (findEntityValue(entities, 'model_number') || '').toUpperCase()\n  };\n\n  const handoverContext = {\n    entities: entities,\n    pattern: pattern,\n    department: 'correspondence',\n    priority: 'routine',\n    detectedFields: detectedFields,\n    confidence: entities.length > 0\n      ? entities.reduce((sum, e) => sum + e.confidence, 0) / entities.length\n      : 0,\n    generated_at: new Date().toISOString(),\n    version: CONFIG.VERSION\n  };\n\n  console.log(`[HANDOVER CONTEXT] Detected: Vendor=\"${detectedFields.vendor}\", Invoice=\"${detectedFields.invoice}\", System=\"${detectedFields.system}\"`);\n\n  return [{\n    json: {\n      ...input,\n      handoverContext: handoverContext\n    }\n  }];\n\n} catch (error) {\n  console.error('[HANDOVER CONTEXT] ERROR:', error.message);\n\n  return [{\n    json: {\n      ...input,\n      handoverContext: {\n        entities: [],\n        pattern: { name: 'GENERAL_CORRESPONDENCE', priority: 20 },\n        department: 'correspondence',\n        priority: 'routine',\n        detectedFields: {\n          system: '',\n          fault_code: '',\n          symptoms: '',\n          vendor: '',\n          invoice: '',\n          model: ''\n        },\n        confidence: 0,\n        error: error.message,\n        version: CONFIG.VERSION\n      }\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        300
+      ],
+      "id": "node5_handover_context",
+      "name": "5. Handover Context Generator"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// NODE 6: HANDOVER SIMPLIFIER\n// ==========================================\n// Purpose: Map complex context to simple 6-field structure\n// CRITICAL: All fields must be present, use \"\" for empty (never null/undefined)\n// Input: handoverContext\n// Output: handoverTemplate (6 fields)\n\nconst input = $input.first().json;\n\nconsole.log('[HANDOVER SIMPLIFIER] ========== Simplifying Handover ==========');\n\ntry {\n  const handoverContext = input.handoverContext;\n\n  if (!handoverContext) {\n    throw new Error('No handoverContext found');\n  }\n\n  const detected = handoverContext.detectedFields;\n\n  // ==========================================\n  // BUILD 6-FIELD TEMPLATE\n  // CRITICAL: ALWAYS include all 6 fields\n  // Use \"\" for empty strings, null for duration if not set\n  // ==========================================\n\n  const simplifiedHandover = {\n    system: detected.system || \"\",\n    fault_code: detected.fault_code || \"\",\n    symptoms: \"\",           // Always empty - user fills (placeholder: \"Add details...\")\n    actions_taken: \"\",      // Always empty - user fills (placeholder: \"Add details...\")\n    duration: null,         // null or number (user fills, e.g., 45)\n    linked_doc: \"\"          // Will be set per-email in next node\n  };\n\n  const autoFilledFields = Object.entries(simplifiedHandover)\n    .filter(([key, val]) =>\n      val !== \"\" &&\n      val !== null &&\n      key !== 'linked_doc' &&\n      key !== 'actions_taken' &&\n      key !== 'duration' &&\n      key !== 'symptoms'\n    )\n    .map(([key]) => key);\n\n  const handoverMetadata = {\n    pattern: handoverContext.pattern.name,\n    department: handoverContext.department,\n    priority: handoverContext.priority,\n    confidence: handoverContext.confidence,\n    auto_filled_count: autoFilledFields.length,\n    auto_filled_fields: autoFilledFields,\n    entity_count: handoverContext.entities.length,\n    generated_at: new Date().toISOString()\n  };\n\n  console.log(`[HANDOVER SIMPLIFIER] Auto-filled ${autoFilledFields.length} fields: ${autoFilledFields.join(', ')}`);\n\n  return [{\n    json: {\n      ...input,\n      handoverTemplate: simplifiedHandover,\n      handoverMetadata: handoverMetadata\n    }\n  }];\n\n} catch (error) {\n  console.error('[HANDOVER SIMPLIFIER] ERROR:', error.message);\n\n  // Return with empty template on error (all fields present)\n  return [{\n    json: {\n      ...input,\n      handoverTemplate: {\n        system: \"\",\n        fault_code: \"\",\n        symptoms: \"\",\n        actions_taken: \"\",\n        duration: null,\n        linked_doc: \"\"\n      },\n      handoverMetadata: {\n        pattern: 'GENERAL_CORRESPONDENCE',\n        department: 'correspondence',\n        priority: 'routine',\n        confidence: 0,\n        auto_filled_count: 0,\n        auto_filled_fields: [],\n        entity_count: 0,\n        error: error.message\n      }\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        300
+      ],
+      "id": "node6_simplifier",
+      "name": "6. Handover Simplifier"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// NODE 7: PER-EMAIL HANDOVER MAPPER\n// ==========================================\n// Purpose: Attach handover_section to EACH email\n// CRITICAL: All 6 fields must be present in every handover_section\n// Input: handoverTemplate + categorized emails\n// Output: Emails with handover_section attached\n\nconst input = $input.first().json;\n\nconsole.log('[PER-EMAIL HANDOVER] ========== Mapping Handovers to Emails ==========');\n\ntry {\n  const primary = input.primary_findings || [];\n  const other = input.other_emails || [];\n  const all = input.all_emails || [];\n  const hidden = input.hidden_results?.emails || [];\n\n  const handoverTemplate = input.handoverTemplate;\n\n  if (!handoverTemplate) {\n    throw new Error('No handoverTemplate found');\n  }\n\n  // ==========================================\n  // ATTACH HANDOVER TO EACH EMAIL\n  // ==========================================\n\n  function attachHandoverToEmail(email) {\n    // Clone the template to avoid mutations\n    const emailHandover = { ...handoverTemplate };\n\n    // Set linked_doc to THIS email's Outlook URL\n    emailHandover.linked_doc = email.links?.document || \"\";\n\n    // ========================================\n    // OPTIONAL ENHANCEMENTS (from email metadata)\n    // ========================================\n\n    // Extract vendor from sender domain\n    if (!emailHandover.system && email.from?.emailAddress?.address) {\n      const domain = email.from.emailAddress.address.split('@')[1];\n      if (domain && !domain.includes('gmail') && !domain.includes('outlook') && !domain.includes('hotmail')) {\n        const vendor = domain.split('.')[0];\n        emailHandover.system = `Correspondence - ${vendor.charAt(0).toUpperCase() + vendor.slice(1)}`;\n      }\n    }\n\n    // Extract invoice from subject\n    if (!emailHandover.fault_code && email.subject) {\n      const invoiceMatch = email.subject.match(/\\b(INV|Invoice)[\\s#:]*([A-Z0-9-]+)/i);\n      if (invoiceMatch) {\n        emailHandover.fault_code = invoiceMatch[2].toUpperCase();\n      }\n    }\n\n    // CRITICAL: Ensure all 6 fields are present (never undefined)\n    return {\n      ...email,\n      handover_section: {\n        system: emailHandover.system || \"\",\n        fault_code: emailHandover.fault_code || \"\",\n        symptoms: emailHandover.symptoms || \"\",\n        actions_taken: emailHandover.actions_taken || \"\",\n        duration: emailHandover.duration !== undefined ? emailHandover.duration : null,\n        linked_doc: emailHandover.linked_doc || \"\"\n      }\n    };\n  }\n\n  const primaryWithHandover = primary.map(attachHandoverToEmail);\n  const otherWithHandover = other.map(attachHandoverToEmail);\n  const allWithHandover = all.map(attachHandoverToEmail);\n  const hiddenWithHandover = hidden.map(attachHandoverToEmail);\n\n  console.log('[PER-EMAIL HANDOVER] ========== Handovers Attached ==========');\n  console.log(`[PER-EMAIL HANDOVER] Primary: ${primaryWithHandover.length}`);\n  console.log(`[PER-EMAIL HANDOVER] Other: ${otherWithHandover.length}`);\n  console.log(`[PER-EMAIL HANDOVER] All: ${allWithHandover.length}`);\n  console.log(`[PER-EMAIL HANDOVER] Hidden: ${hiddenWithHandover.length}`);\n\n  return [{\n    json: {\n      ...input,\n      primary_findings: primaryWithHandover,\n      other_emails: otherWithHandover,\n      all_emails: allWithHandover,\n      hidden_results: {\n        count: hiddenWithHandover.length,\n        emails: hiddenWithHandover\n      }\n    }\n  }];\n\n} catch (error) {\n  console.error('[PER-EMAIL HANDOVER] ERROR:', error.message);\n\n  // Return with empty handover sections (all fields present)\n  const emptyHandover = {\n    system: \"\",\n    fault_code: \"\",\n    symptoms: \"\",\n    actions_taken: \"\",\n    duration: null,\n    linked_doc: \"\"\n  };\n\n  const primary = (input.primary_findings || []).map(e => ({ ...e, handover_section: { ...emptyHandover, linked_doc: e.links?.document || \"\" } }));\n  const other = (input.other_emails || []).map(e => ({ ...e, handover_section: { ...emptyHandover, linked_doc: e.links?.document || \"\" } }));\n  const all = (input.all_emails || []).map(e => ({ ...e, handover_section: { ...emptyHandover, linked_doc: e.links?.document || \"\" } }));\n  const hidden = (input.hidden_results?.emails || []).map(e => ({ ...e, handover_section: { ...emptyHandover, linked_doc: e.links?.document || \"\" } }));\n\n  return [{ json: { ...input, primary_findings: primary, other_emails: other, all_emails: all, hidden_results: { count: hidden.length, emails: hidden } } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2200,
+        300
+      ],
+      "id": "node7_mapper",
+      "name": "7. Per-Email Handover Mapper"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==========================================\n// NODE 8: FINAL EMAIL WRAPPER\n// ==========================================\n// Purpose: Transform emails to document-like structure + build complete response\n// CRITICAL: All handover_section fields must be present\n// Input: Emails with handover sections\n// Output: Complete webhook response\n\nconst input = $input.first().json;\n\nconsole.log('[EMAIL WRAPPER] ========== Building Final Response ==========');\n\ntry {\n  // ==========================================\n  // TRANSFORM EMAILS TO DOCUMENT STRUCTURE\n  // ==========================================\n\n  function transformEmailToDocument(email) {\n    return {\n      id: email.id,\n      display_name: email.subject || \"(No Subject)\",\n      sender: {\n        name: email.from?.emailAddress?.name || \"Unknown\",\n        email: email.from?.emailAddress?.address || \"\"\n      },\n      received_date: email.receivedDateTime,\n      content_preview: email.content_preview || \"\",\n      match_ratio: email.match_ratio || 0.5,\n      has_attachments: email.hasAttachments || false,\n      links: email.links,\n      metadata: {\n        importance: email.importance || \"normal\",\n        is_read: email.isRead || false,\n        categories: email.categories || []\n      },\n      // CRITICAL: handover_section must have all 6 fields\n      handover_section: {\n        system: email.handover_section?.system || \"\",\n        fault_code: email.handover_section?.fault_code || \"\",\n        symptoms: email.handover_section?.symptoms || \"\",\n        actions_taken: email.handover_section?.actions_taken || \"\",\n        duration: email.handover_section?.duration !== undefined ? email.handover_section.duration : null,\n        linked_doc: email.handover_section?.linked_doc || \"\"\n      }\n    };\n  }\n\n  const primary = (input.primary_findings || []).map(transformEmailToDocument);\n  const other = (input.other_emails || []).map(transformEmailToDocument);\n  const all = (input.all_emails || []).map(transformEmailToDocument);\n  const hidden = (input.hidden_results?.emails || []).map(transformEmailToDocument);\n\n  const showing = primary.length + other.length + all.length;\n  const emails_searched = input.analyzed_data?.email_analysis?.metadata?.total_analyzed || 50;\n\n  // ==========================================\n  // BUILD COMPLETE WEBHOOK RESPONSE\n  // ==========================================\n\n  const response = {\n    success: true,\n    ux_display: \"search_mode\",\n    ui_payload: {\n      // Cascading email results\n      primary_findings: primary,\n      other_emails: other,\n      all_emails: all,\n      hidden_results: {\n        count: hidden.length,\n        emails: hidden\n      },\n\n      // Summary metadata\n      summary: {\n        emails_found: input.emails_found || (input.emails || []).length,\n        showing: showing,\n        hidden: hidden.length,\n        tier_reached: input.tier_reached || 1,\n        emails_searched: emails_searched,\n        message: showing === 0 ? `Searched ${emails_searched} recent emails, found 0 matches` : null\n      },\n\n      // Global handover section (template for entire search)\n      // CRITICAL: All 6 fields must be present\n      handover_section: {\n        system: input.handoverTemplate?.system || \"\",\n        fault_code: input.handoverTemplate?.fault_code || \"\",\n        symptoms: input.handoverTemplate?.symptoms || \"\",\n        actions_taken: input.handoverTemplate?.actions_taken || \"\",\n        duration: input.handoverTemplate?.duration !== undefined ? input.handoverTemplate.duration : null,\n        linked_doc: primary[0]?.handover_section?.linked_doc || \"\"  // Link to top result\n      }\n    }\n  };\n\n  console.log('[EMAIL WRAPPER] ========== Response Complete ==========');\n  console.log(`[EMAIL WRAPPER] Showing: ${showing}, Hidden: ${hidden.length}`);\n  console.log(`[EMAIL WRAPPER] Primary with handovers: ${primary.filter(e => e.handover_section.system !== \"\").length}/${primary.length}`);\n\n  return [{ json: response }];\n\n} catch (error) {\n  console.error('[EMAIL WRAPPER] ERROR:', error.message);\n\n  return [{\n    json: {\n      success: false,\n      ux_display: \"error\",\n      error: {\n        type: \"system_error\",\n        message: error.message,\n        timestamp: new Date().toISOString()\n      }\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2400,
+        300
+      ],
+      "id": "node8_wrapper",
+      "name": "8. Final Email Wrapper"
+    }
+  ],
+  "connections": {
+    "1. Email Consolidator": {
+      "main": [
+        [
+          {
+            "node": "2. Email Preview Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Email Preview Generator": {
+      "main": [
+        [
+          {
+            "node": "3. Email Link Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Email Link Generator": {
+      "main": [
+        [
+          {
+            "node": "4. Email Ranker & Categorizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4. Email Ranker & Categorizer": {
+      "main": [
+        [
+          {
+            "node": "5. Handover Context Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5. Handover Context Generator": {
+      "main": [
+        [
+          {
+            "node": "6. Handover Simplifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6. Handover Simplifier": {
+      "main": [
+        [
+          {
+            "node": "7. Per-Email Handover Mapper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7. Per-Email Handover Mapper": {
+      "main": [
+        [
+          {
+            "node": "8. Final Email Wrapper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-10-20T00:00:00.000Z",
+  "versionId": "1"
+}

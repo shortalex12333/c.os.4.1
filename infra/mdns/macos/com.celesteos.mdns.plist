@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.celesteos.mdns</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/celeste7/Documents/NEWSITE/infra/mdns/advertise-mdns.py</string>
+        <string>80</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/celesteos-mdns.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/celesteos-mdns.error.log</string>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/celeste7/Documents/NEWSITE</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+
+    <key>UserName</key>
+    <string>celeste7</string>
+</dict>
+</plist>

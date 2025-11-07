@@ -1,0 +1,276 @@
+/* Responsive Layout System - Replacing figma-compiled.css */
+
+/* ========== Base Reset ========== */
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ========== Core Layout Grid ========== */
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Desktop Layout - Grid System */
+@media (min-width: 768px) {
+  .app-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .sidebar-container {
+    grid-column: 1;
+    width: 260px;
+    height: 100%;
+    overflow-y: auto;
+    background: white;
+    border-right: 1px solid #e5e7eb;
+  }
+  
+  .main-content-container {
+    grid-column: 2;
+    min-width: 0; /* Prevent grid blowout */
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Mobile Layout - Stack */
+@media (max-width: 767px) {
+  .app-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100%;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    background: white;
+  }
+  
+  .sidebar-container.open {
+    transform: translateX(0);
+  }
+  
+  .main-content-container {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+  }
+}
+
+/* ========== Content Containers ========== */
+
+/* Login Form - Proper Desktop Width */
+.login-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.login-form-wrapper {
+  width: 100%;
+  max-width: 480px; /* Mobile */
+}
+
+@media (min-width: 768px) {
+  .login-form-wrapper {
+    max-width: 520px; /* Tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .login-form-wrapper {
+    max-width: 560px; /* Desktop */
+  }
+}
+
+/* Chat Area - Full Width Usage */
+.chat-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages-area {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.chat-content-wrapper {
+  width: 100%;
+  max-width: 100%; /* Mobile */
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .chat-content-wrapper {
+    max-width: 90%; /* Tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .chat-content-wrapper {
+    max-width: 1200px; /* Desktop */
+  }
+}
+
+@media (min-width: 1536px) {
+  .chat-content-wrapper {
+    max-width: 1400px; /* Large Desktop */
+  }
+}
+
+/* Welcome Screen */
+.welcome-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.welcome-content {
+  width: 100%;
+  max-width: 100%; /* Mobile */
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .welcome-content {
+    max-width: 600px; /* Tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .welcome-content {
+    max-width: 800px; /* Desktop */
+  }
+}
+
+/* Input Area */
+.input-area-container {
+  width: 100%;
+  border-top: 1px solid #e5e7eb;
+  background: white;
+  padding: 1rem;
+}
+
+.input-area-wrapper {
+  width: 100%;
+  max-width: 100%; /* Mobile */
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .input-area-wrapper {
+    max-width: 90%; /* Tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .input-area-wrapper {
+    max-width: 1200px; /* Desktop */
+  }
+}
+
+/* ========== Background System ========== */
+.background-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ========== Typography Responsive ========== */
+.heading-primary {
+  font-size: 1.5rem; /* Mobile */
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .heading-primary {
+    font-size: 2rem; /* Tablet */
+  }
+}
+
+@media (min-width: 1024px) {
+  .heading-primary {
+    font-size: 2.5rem; /* Desktop */
+  }
+}
+
+.text-body {
+  font-size: 0.875rem; /* Mobile */
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .text-body {
+    font-size: 1rem; /* Tablet+ */
+  }
+}
+
+/* ========== Utility Classes ========== */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-1 { flex: 1; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+.z-0 { z-index: 0; }
+.z-10 { z-index: 10; }
+.z-50 { z-index: 50; }
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow: auto; }
+
+/* ========== Scrollbar Styling ========== */
+.scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}

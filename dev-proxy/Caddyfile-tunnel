@@ -1,0 +1,33 @@
+# Public + LAN proxy (allows internet access via h3.celeste7.ai)
+:8888 {
+    # REMOVED LAN-only restrictions to allow public access
+
+    # n8n webhook proxy (CRITICAL for webhooks to work)
+    handle /webhook/* {
+        reverse_proxy localhost:5678
+    }
+
+    # Supabase backend proxy
+    handle /supabase/* {
+        uri strip_prefix /supabase
+        reverse_proxy localhost:54321
+    }
+
+    # JWT document service proxy
+    handle /jwt/* {
+        uri strip_prefix /jwt
+        reverse_proxy localhost:8098
+    }
+
+    # Default: Frontend (Vite on port 8888)
+    handle {
+        reverse_proxy localhost:8888 {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+            header_up X-Forwarded-Proto {scheme}
+            header_up Upgrade {http.request.header.Upgrade}
+            header_up Connection {http.request.header.Connection}
+        }
+    }
+}

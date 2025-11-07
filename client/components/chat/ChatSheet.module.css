@@ -1,0 +1,33 @@
+/* ChatSheet - Frosted glass chat container */
+.celChatSheet { 
+  color: #0B1220; 
+}
+
+.celChatSheet.dark { 
+  color: rgba(255,255,255,.92); 
+}
+
+.celChatSheet svg { 
+  stroke: currentColor; 
+  fill: none; 
+}
+
+.celChatSheet .title {
+  color: #0B1220;
+}
+
+.celChatSheet.dark .title {
+  color: rgba(255,255,255,.92);
+}
+
+/* Ensure nested text inherits the sheet color for readability */
+.celChatSheet :where(p, li, span, div, blockquote, code, strong, em) {
+  color: currentColor !important;
+}
+.celChatSheet :where(h1, h2, h3, h4, h5, h6) {
+  color: currentColor !important;
+}
+.celChatSheet a {
+  color: currentColor !important;
+  text-decoration-color: currentColor !important;
+}
