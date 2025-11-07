@@ -1,10 +1,10 @@
-api/
-server/
+/api/
+/server/
 *.py
 requirements.txt
 *.sh
-scripts/
-supabase/
-docs/
-HANDOVER NOTES/
-yacht-frontend/
+/scripts/
+/supabase/
+/docs/
+/HANDOVER NOTES/
+/yacht-frontend/
