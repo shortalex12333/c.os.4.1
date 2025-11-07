@@ -2,12 +2,14 @@ import React, { createContext, useState, useContext, useEffect, ReactNode } from
 import supabaseAuthService from '../services/supabaseAuthService';
 import { supabase } from '../config/supabaseConfig';
 import type { SupabaseUserAuthResponse } from '../services/supabaseAuthService';
+import type { Session } from '@supabase/supabase-js';
 
 // Keep backward compatibility with existing UserAuthResponse type
 type UserAuthResponse = SupabaseUserAuthResponse;
 
 interface AuthContextType {
   user: UserAuthResponse | null;
+  session: Session | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
@@ -21,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserAuthResponse | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -50,6 +53,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
 
         setUser(userData);
+        setSession(session);
+      } else {
+        setSession(null);
       }
       setIsLoading(false);
     };
@@ -82,9 +88,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           };
 
           setUser(userData);
+          setSession(session);
         } else {
           // User logged out
           setUser(null);
+          setSession(null);
         }
 
         setIsLoading(false);
@@ -157,6 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value: AuthContextType = {
     user,
+    session,
     isLoading,
     isAuthenticated: !!user,
     login,

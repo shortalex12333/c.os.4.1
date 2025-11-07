@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Ship, Mail, Paperclip, Send, MoreHorizontal } from 'lucide-react';
 
-type SearchType = 'yacht' | 'email';
+type SearchType = 'yacht' | 'email' | 'sop';
 
 interface InputAreaProps {
   onStartChat?: (searchType: SearchType, message?: string) => void;

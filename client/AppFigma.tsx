@@ -33,7 +33,7 @@ interface DocSummary {
 
 interface Message {
   id: string;
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: string;
 
@@ -608,7 +608,7 @@ export default function App() {
         search_type: responseData.search_type,
         // Add full ui_payload for Ask AI functionality
         ui_payload: uiPayload,
-        original_query: responseData.original_query || query,
+        original_query: responseData.original_query || text,
         search_strategy: responseData.search_strategy || 'NAS'
       };
 

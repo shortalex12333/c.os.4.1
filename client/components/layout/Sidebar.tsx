@@ -249,8 +249,8 @@ interface SidebarProps {
   displayName: string;
   isChatMode: boolean;
   isDarkMode?: boolean;
-  onSearchTypeChange?: (searchType: 'yacht' | 'email') => void;
-  selectedSearchType?: 'yacht' | 'email';
+  onSearchTypeChange?: (searchType: 'yacht' | 'email' | 'sop') => void;
+  selectedSearchType?: 'yacht' | 'email' | 'sop';
   // Mobile drawer props
   isDrawerOpen?: boolean;
   // Chat selection props
