@@ -2,6 +2,13 @@ import { Router, Request, Response } from 'express';
 
 const router = Router();
 
+// Helper function to get n8n base URL based on environment
+const getN8nBaseUrl = (): string => {
+  return process.env.NODE_ENV === 'production'
+    ? 'https://api.celeste7.ai/webhook'
+    : 'http://localhost:5678/webhook';
+};
+
 /**
  * Text-Chat webhook endpoint
  * Receives chat messages from frontend and forwards to n8n
@@ -17,8 +24,8 @@ router.post('/text-chat', async (req: Request, res: Response) => {
       timestamp: new Date().toISOString()
     });
 
-    // Forward to n8n webhook on port 5678
-    const n8nWebhookUrl = 'http://localhost:5678/webhook/text-chat';
+    // Forward to n8n webhook
+    const n8nWebhookUrl = `${getN8nBaseUrl()}/text-chat`;
     
     const response = await fetch(n8nWebhookUrl, {
       method: 'POST',
@@ -79,7 +86,7 @@ router.post('/email-search', async (req: Request, res: Response) => {
     console.log('📧 Received email-search webhook');
 
     // Forward to n8n
-    const n8nWebhookUrl = 'http://localhost:5678/webhook/email-search';
+    const n8nWebhookUrl = `${getN8nBaseUrl()}/email-search`;
     
     const response = await fetch(n8nWebhookUrl, {
       method: 'POST',
@@ -125,7 +132,7 @@ router.post('/llm-only', async (req: Request, res: Response) => {
     console.log('🤖 Received llm-only webhook');
 
     // Forward to n8n
-    const n8nWebhookUrl = 'http://localhost:5678/webhook/llm-only';
+    const n8nWebhookUrl = `${getN8nBaseUrl()}/llm-only`;
     
     const response = await fetch(n8nWebhookUrl, {
       method: 'POST',
@@ -175,7 +182,7 @@ router.post('/user-auth', async (req: Request, res: Response) => {
     });
 
     // Forward to n8n
-    const n8nWebhookUrl = 'http://localhost:5678/webhook/user-auth';
+    const n8nWebhookUrl = `${getN8nBaseUrl()}/user-auth`;
 
     const response = await fetch(n8nWebhookUrl, {
       method: 'POST',
@@ -225,7 +232,7 @@ router.post('/ask-ai-sol', async (req: Request, res: Response) => {
     });
 
     // Forward to n8n
-    const n8nWebhookUrl = 'http://localhost:5678/webhook/ask-ai-sol';
+    const n8nWebhookUrl = `${getN8nBaseUrl()}/ask-ai-sol`;
 
     const response = await fetch(n8nWebhookUrl, {
       method: 'POST',
@@ -271,7 +278,7 @@ router.post('/token-refresh-trigger', async (req: Request, res: Response) => {
     console.log('🔄 Received token-refresh-trigger webhook');
 
     // Forward to n8n
-    const n8nWebhookUrl = 'http://localhost:5678/webhook/token-refresh-trigger';
+    const n8nWebhookUrl = `${getN8nBaseUrl()}/token-refresh-trigger`;
 
     const response = await fetch(n8nWebhookUrl, {
       method: 'POST',
@@ -317,7 +324,7 @@ router.post('/token-refresh-complete', async (req: Request, res: Response) => {
     console.log('✅ Received token-refresh-complete webhook');
 
     // Forward to n8n
-    const n8nWebhookUrl = 'http://localhost:5678/webhook/token-refresh-complete';
+    const n8nWebhookUrl = `${getN8nBaseUrl()}/token-refresh-complete`;
 
     const response = await fetch(n8nWebhookUrl, {
       method: 'POST',

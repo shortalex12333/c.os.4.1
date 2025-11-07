@@ -119,8 +119,10 @@ router.post('/auth/microsoft/relay', async (req: Request, res: Response) => {
       // Direct Supabase storage - Process and store Microsoft tokens
       console.log('💾 Processing Microsoft tokens and storing to Supabase...');
 
-      const supabaseUrl = 'http://127.0.0.1:54321';
-      const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU';
+      const supabaseUrl = process.env.NODE_ENV === 'production'
+        ? 'https://vivovcnaapmcfxxfhzxk.supabase.co'
+        : 'http://127.0.0.1:54321';
+      const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU';
 
       // Extract email with fallback handling
       let originalEmail = user_email || '';
@@ -236,7 +238,7 @@ router.post('/auth/microsoft/relay', async (req: Request, res: Response) => {
                   setTimeout(function() { window.close(); }, 2000);
                 } else {
                   setTimeout(function() {
-                    window.location.href = 'http://localhost:8888';
+                    window.location.href = window.location.protocol + '//' + window.location.host;
                   }, 3000);
                 }
               </script>
@@ -408,7 +410,7 @@ router.get('/auth/microsoft/callback', async (req: Request, res: Response) => {
       <body>
         <h2 class="success">✅ Authentication Successful!</h2>
         <p>Redirecting you back to CelesteOS...</p>
-        <form id="relayForm" action="http://localhost:8888/auth/microsoft/relay" method="post">
+        <form id="relayForm" action="${process.env.NODE_ENV === 'production' ? 'https://celeste7.ai' : 'http://localhost:8888'}/auth/microsoft/relay" method="post">
           <input type="hidden" name="code" value="${code}">
           <input type="hidden" name="state" value="${state}">
           <input type="hidden" name="success" value="true">
@@ -459,8 +461,10 @@ router.get('/user/:userId/status', async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     // Check if user has email tokens in Supabase
-    const supabaseUrl = 'http://127.0.0.1:54321';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+    const supabaseUrl = process.env.NODE_ENV === 'production'
+      ? 'https://vivovcnaapmcfxxfhzxk.supabase.co'
+      : 'http://127.0.0.1:54321';
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
     
     console.log('🔍 Checking email status for user:', userId);
     

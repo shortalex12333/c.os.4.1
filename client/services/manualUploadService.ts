@@ -30,7 +30,10 @@ class ManualUploadService {
 
   constructor() {
     // Manual upload webhook endpoint
-    this.webhookUrl = 'http://localhost:5678/webhook/manual-upload';
+    const hostname = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+    this.webhookUrl = hostname.includes('celeste7.ai') || hostname.includes('vercel.app')
+      ? 'https://api.celeste7.ai/webhook/manual-upload'
+      : 'http://localhost:5678/webhook/manual-upload';
   }
 
   /**

@@ -37,7 +37,9 @@ export const WEBHOOK_CONFIG = {
   // Chat endpoints - text-chat for local mode
   chat: {
     textChat: `${WEBHOOK_BASE_URL}/text-chat`,
-    askAI: `http://localhost:5678/webhook/ask-ai` // Direct to n8n for ask-ai
+    askAI: typeof window !== 'undefined' && window.location.hostname === 'localhost'
+      ? `http://localhost:5678/webhook/ask-ai`
+      : `https://api.celeste7.ai/webhook/ask-ai`
   },
   
   // Maritime AI feedback endpoint
