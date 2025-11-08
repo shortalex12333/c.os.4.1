@@ -3,7 +3,7 @@
  */
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { startOutlookAuth, HandoverRange } from '../api/outlook';
+import { startOutlookAuth, HandoverRange } from '../services/outlookService';
 import { useAuth } from './AuthContext';
 import completeWebhookService from '../services/webhookServiceComplete';
 
