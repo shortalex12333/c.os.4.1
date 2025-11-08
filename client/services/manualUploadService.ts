@@ -29,11 +29,10 @@ class ManualUploadService {
   private webhookUrl: string;
 
   constructor() {
-    // Manual upload webhook endpoint
-    const hostname = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-    this.webhookUrl = hostname.includes('celeste7.ai') || hostname.includes('vercel.app')
-      ? 'https://api.celeste7.ai/webhook/manual-upload'
-      : 'http://localhost:5678/webhook/manual-upload';
+    // Manual upload webhook endpoint - use environment variable or default to production
+    this.webhookUrl = import.meta.env.VITE_WEBHOOK_BASE_URL
+      ? `${import.meta.env.VITE_WEBHOOK_BASE_URL}/manual-upload`
+      : 'https://api.celeste7.ai/webhook/manual-upload';
   }
 
   /**

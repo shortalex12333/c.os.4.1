@@ -323,10 +323,9 @@ export async function submitHandoverToWebhook(payload: any): Promise<{ success: 
   try {
     console.log('📤 Submitting handover to webhook:', payload);
 
-    const webhookUrl = typeof window !== 'undefined' &&
-      (window.location.hostname.includes('celeste7.ai') || window.location.hostname.includes('vercel.app'))
-      ? 'https://api.celeste7.ai/webhook/handover-submit'
-      : 'http://localhost:5678/webhook/handover-submit';
+    const webhookUrl = import.meta.env.VITE_WEBHOOK_BASE_URL
+      ? `${import.meta.env.VITE_WEBHOOK_BASE_URL}/handover-submit`
+      : 'https://api.celeste7.ai/webhook/handover-submit';
 
     const response = await fetch(webhookUrl, {
       method: 'POST',

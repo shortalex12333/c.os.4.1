@@ -7,24 +7,9 @@
 import { getHostIP } from '../config/network';
 
 // Get N8N webhook URL (use host IP for local network access)
-const getWebhookUrl = (): string => {
-  const hostname = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+import { WEBHOOK_CONFIG } from '../config/webhookConfig';
 
-  // If accessing via localhost, use localhost
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return 'http://localhost:5678/webhook/ask-ai';
-  }
-
-  // If in production (celeste7.ai or similar), use cloud URL
-  if (hostname.includes('celeste7.ai') || hostname.includes('vercel.app')) {
-    return 'https://api.celeste7.ai/webhook/ask-ai';
-  }
-
-  // Otherwise use host IP for local network
-  return `http://${getHostIP()}:5678/webhook/ask-ai`;
-};
-
-const WEBHOOK_URL = getWebhookUrl();
+const WEBHOOK_URL = WEBHOOK_CONFIG.chat.askAI;
 
 // Request/Response types matching N8N workflow expectations
 export interface AskAIRequest {

@@ -70,11 +70,17 @@ function expressPlugin(): Plugin {
     apply: "serve", // Only apply during development (serve mode)
     configureServer(server) {
       // Lazy load server to avoid build-time import
-      const { createServer } = require("./server");
-      const app = createServer();
-
-      // Add Express app as middleware to Vite dev server
-      server.middlewares.use(app);
+      // Wrap in try-catch to prevent build failures when server/ doesn't exist (e.g., Vercel)
+      try {
+        const { createServer } = require("./server");
+        const app = createServer();
+        // Add Express app as middleware to Vite dev server
+        server.middlewares.use(app);
+        console.log('✅ Express middleware loaded');
+      } catch (error) {
+        console.warn('⚠️ Express middleware not available (server directory not found)');
+        console.warn('This is expected in production builds like Vercel');
+      }
     },
   };
 }
