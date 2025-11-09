@@ -1,7 +1,9 @@
-/api/
-/server/
-*.py
-requirements.txt
+/api
+/api/**
+/server
+/server/**
+**/*.py
+**/requirements.txt
 *.sh
 /scripts/
 /supabase/
