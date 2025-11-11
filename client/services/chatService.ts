@@ -3,7 +3,7 @@
  * Connects React components to Supabase chat tables
  */
 
-import { supabase } from '../config/supabaseConfig';
+import { supabase } from '../lib/supabase';
 
 // Types matching our database schema
 export interface ChatSession {

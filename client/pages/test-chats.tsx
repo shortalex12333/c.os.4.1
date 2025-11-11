@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { chatService } from '../services/chatService';
-import { supabase } from '../config/supabaseConfig';
+import { supabase } from '../lib/supabase';
 
 export default function TestChatsPage() {
   const [status, setStatus] = useState<any>({

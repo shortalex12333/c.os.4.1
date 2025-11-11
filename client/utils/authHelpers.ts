@@ -3,7 +3,7 @@
  * Handles auth token cleanup and validation
  */
 
-import { supabase } from '../config/supabaseConfig';
+import { supabase } from '../lib/supabase';
 
 /**
  * Clear all Supabase auth tokens and session data

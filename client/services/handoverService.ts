@@ -4,7 +4,7 @@
  * Uses ORIGINAL schema: system_affected, fault_code, symptoms, actions_taken, duration_minutes, notes
  */
 
-import { supabase } from '../config/supabaseConfig';
+import { supabase } from '../lib/supabase';
 
 export interface EntityPair {
   key: string;

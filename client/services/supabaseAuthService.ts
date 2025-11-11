@@ -3,7 +3,7 @@
  * Replaces webhook-based authentication with direct Supabase Auth
  */
 
-import { supabase } from '../config/supabaseConfig';
+import { supabase } from '../lib/supabase';
 import type { 
   User, 
   Session, 
